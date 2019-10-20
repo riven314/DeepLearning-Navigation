@@ -1,4 +1,4 @@
 /__pycache__
 /.vscode
 /d435_module/*.py
-/d435_module/__pycache__
+/d435_module/__pycache__/*
