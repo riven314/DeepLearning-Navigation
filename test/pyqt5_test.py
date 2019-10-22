@@ -6,6 +6,8 @@ test if pyqt5 interface can do the following:
 REFERENCE
 1. pyqt5 + video stream in opencv https://stackoverflow.com/questions/44404349/pyqt-showing-video-stream-from-opencv?fbclid=IwAR1oUhFLXk2HVkrs4yTqV2yvtE933A8fSjEBb853LK7HM3cIHrVk-ElurUg
 2. get pixel information in pyqt5 https://stackoverflow.com/questions/3504522/pyqt-get-pixel-position-and-value-when-mouse-click-on-the-image
+3. QThread explanation https://medium.com/@webmamoffice/getting-started-gui-s-with-python-pyqt-qthread-class-1b796203c18c
+4. PyQt5 tutorial http://zetcode.com/gui/pyqt5/
 
 LOG
 [22/10/2019]
