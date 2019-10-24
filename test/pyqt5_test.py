@@ -13,6 +13,9 @@ LOG
 [22/10/2019]
 - What is QThread?
 - How does the image pop out in GUI?
+
+[24/10/2019]
+- What is QImage? QThread? QPixmap?
 """
 import os
 import sys
@@ -25,6 +28,8 @@ from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 
 class Thread(QThread):
+    # a signal called "changePixmap" that take an argument QImage
+    # QImage is an image representation that allows direct access to pixel data
     changePixmap = pyqtSignal(QImage)
 
     def run(self):
@@ -63,6 +68,7 @@ class App(QWidget):
         self.label.move(280, 120)
         self.label.resize(640, 480)
         th = Thread(self)
+        # signal is connected to a slot using .connect()
         th.changePixmap.connect(self.setImage)
         th.start()
 
