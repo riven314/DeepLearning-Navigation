@@ -1,11 +1,9 @@
 """
 test using logger in pyqt5 modules
 
-emit()
-
-TO-DO:
-1. logger module into logger
-2. Qthread split, copy, asynchronous ... etc.
+QUESTION:
+1. where does signal.emit() activated?
+2. any way to dump logger message into a log file?
 """
 import sys
 from PyQt5 import QtWidgets
@@ -29,12 +27,16 @@ class MyDialog(QtWidgets.QDialog, QtWidgets.QPlainTextEdit):
 
         logTextBox = QTextEditLogger(self)
         # You can format what is printed to text box
-        logTextBox.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        logTextBox.setFormatter(formatter)
         logging.getLogger().addHandler(logTextBox)
         # You can control the logging level
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
         self.logger.addHandler(logTextBox)
+        file_handler = logging.FileHandler('test\sample.log')
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
         self._button = QtWidgets.QPushButton(self)
         self._button.setText('Test Me')
