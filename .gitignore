@@ -2,5 +2,6 @@
 /.vscode
 /d435_module/*.py
 /d435_module/__pycache__/*
+/mobilenet_segment
 /examples/__pycache__
 /test/__pycache__
