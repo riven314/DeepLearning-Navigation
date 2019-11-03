@@ -1,196 +1,84 @@
-2019-10-29 20:02:39,774 - Window - INFO - window setup! ready to rock!
-2019-10-29 20:02:39,848 - Window - INFO - thread set up complete! ready to rock!
-2019-10-29 20:02:39,848 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:39,849 - QThread - update - INFO - 1572350559.8494868
-2019-10-29 20:02:40,049 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:40,051 - QThread - update - INFO - 1572350560.0511184
-2019-10-29 20:02:40,051 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:40,053 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:40,054 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:40,252 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:40,253 - QThread - update - INFO - 1572350560.2531264
-2019-10-29 20:02:40,254 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:40,256 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:40,257 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:40,454 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:40,454 - QThread - update - INFO - 1572350560.4546638
-2019-10-29 20:02:40,456 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:40,457 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:40,459 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:40,656 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:40,656 - QThread - update - INFO - 1572350560.6566026
-2019-10-29 20:02:40,660 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:40,664 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:40,667 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:40,857 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:40,857 - QThread - update - INFO - 1572350560.8575323
-2019-10-29 20:02:40,859 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:40,862 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:40,865 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:41,058 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:41,058 - QThread - update - INFO - 1572350561.0587626
-2019-10-29 20:02:41,060 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:41,061 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:41,063 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:41,259 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:41,259 - QThread - update - INFO - 1572350561.259658
-2019-10-29 20:02:41,267 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:41,273 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:41,278 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:41,460 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:41,460 - QThread - update - INFO - 1572350561.4609864
-2019-10-29 20:02:41,463 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:41,464 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:41,466 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:41,662 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:41,663 - QThread - update - INFO - 1572350561.6631055
-2019-10-29 20:02:41,664 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:41,665 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:41,667 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:41,863 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:41,863 - QThread - update - INFO - 1572350561.8632827
-2019-10-29 20:02:41,865 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:41,866 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:41,868 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:42,064 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:42,064 - QThread - update - INFO - 1572350562.064415
-2019-10-29 20:02:42,067 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:42,068 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:42,070 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:42,265 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:42,265 - QThread - update - INFO - 1572350562.2659054
-2019-10-29 20:02:42,267 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:42,268 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:42,270 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:42,467 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:42,467 - QThread - update - INFO - 1572350562.4674022
-2019-10-29 20:02:42,469 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:42,470 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:42,472 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:42,667 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:42,668 - QThread - update - INFO - 1572350562.6688943
-2019-10-29 20:02:42,678 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:42,681 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:42,684 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:42,869 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:42,869 - QThread - update - INFO - 1572350562.869547
-2019-10-29 20:02:42,873 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:42,874 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:42,876 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:43,071 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:43,071 - QThread - update - INFO - 1572350563.0711062
-2019-10-29 20:02:43,073 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:43,074 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:43,075 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:43,274 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:45,608 - Window - INFO - window setup! ready to rock!
+2019-11-03 17:36:45,684 - Window - INFO - thread set up complete! ready to rock!
+2019-11-03 17:36:45,684 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:45,685 - QThread - update - INFO - 1572773805.6850107
+2019-11-03 17:36:45,885 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:45,886 - QThread - update - INFO - 1572773805.88626
+2019-11-03 17:36:45,889 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:45,891 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:45,894 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:46,088 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:46,088 - QThread - update - INFO - 1572773806.0886219
+2019-11-03 17:36:46,090 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:46,091 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:46,093 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:46,290 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:46,292 - QThread - update - INFO - 1572773806.292758
+2019-11-03 17:36:46,292 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:46,295 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:46,297 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:46,493 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:46,493 - QThread - update - INFO - 1572773806.4936953
+2019-11-03 17:36:46,495 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:46,496 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:46,498 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:46,694 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:46,694 - QThread - update - INFO - 1572773806.6948192
+2019-11-03 17:36:46,696 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:46,698 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:46,699 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:46,895 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:46,895 - QThread - update - INFO - 1572773806.8953612
+2019-11-03 17:36:46,899 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:46,903 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:46,907 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:47,096 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:47,096 - QThread - update - INFO - 1572773807.0968227
+2019-11-03 17:36:47,099 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:47,102 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:47,105 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:47,297 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:47,297 - QThread - update - INFO - 1572773807.2978082
+2019-11-03 17:36:47,302 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:47,306 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:47,309 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:47,499 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:47,501 - QThread - update - INFO - 1572773807.5012946
+2019-11-03 17:36:47,508 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:47,515 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:47,520 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:47,704 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:47,704 - QThread - update - INFO - 1572773807.7046974
+2019-11-03 17:36:47,706 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:47,707 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:47,709 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:47,908 - Window - INFO - sine f is plotted!
 ad!
-2019-10-29 20:02:43,345 - QThread - update - INFO - 1572350563.3458788
-2019-10-29 20:02:43,347 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:43,348 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:43,546 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:43,546 - QThread - update - INFO - 1572350563.546876
-2019-10-29 20:02:43,548 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:43,549 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:43,551 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:43,747 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:43,747 - QThread - update - INFO - 1572350563.7473521
-2019-10-29 20:02:43,748 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:43,750 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:43,751 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:43,947 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:43,947 - QThread - update - INFO - 1572350563.9478161
-2019-10-29 20:02:43,949 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:43,950 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:43,952 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:44,148 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:44,148 - QThread - update - INFO - 1572350564.148281
-2019-10-29 20:02:44,150 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:44,151 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:44,153 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:44,349 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:44,349 - QThread - update - INFO - 1572350564.3497431
-2019-10-29 20:02:44,351 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:44,353 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:44,355 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:44,550 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:44,551 - QThread - update - INFO - 1572350564.551798
-2019-10-29 20:02:44,552 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:44,553 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:44,555 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:44,753 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:44,753 - QThread - update - INFO - 1572350564.75346
-2019-10-29 20:02:44,755 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:44,756 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:44,757 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:44,954 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:44,954 - QThread - update - INFO - 1572350564.9540155
-2019-10-29 20:02:44,956 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:44,957 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:44,959 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:45,155 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:45,155 - QThread - update - INFO - 1572350565.15589
-2019-10-29 20:02:45,157 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:45,158 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:45,160 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:45,356 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:45,356 - QThread - update - INFO - 1572350565.3564086
-2019-10-29 20:02:45,358 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:45,359 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:45,361 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:45,557 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:45,557 - QThread - update - INFO - 1572350565.557141
-2019-10-29 20:02:45,559 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:45,560 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:45,562 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:45,758 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:45,758 - QThread - update - INFO - 1572350565.7582922
-2019-10-29 20:02:45,760 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:45,761 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:45,763 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:45,959 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:45,959 - QThread - update - INFO - 1572350565.9595437
-2019-10-29 20:02:45,961 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:45,963 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:45,965 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:46,159 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:46,159 - QThread - update - INFO - 1572350566.1599672
-2019-10-29 20:02:46,161 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:46,163 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:46,165 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:46,361 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:46,361 - QThread - update - INFO - 1572350566.3611119
-2019-10-29 20:02:46,363 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:46,365 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:46,366 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:46,562 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:46,562 - QThread - update - INFO - 1572350566.5621939
-2019-10-29 20:02:46,564 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:46,567 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:46,569 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:46,762 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:46,762 - QThread - update - INFO - 1572350566.7626588
-2019-10-29 20:02:46,764 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:46,766 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:46,768 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:46,963 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:46,963 - QThread - update - INFO - 1572350566.9638324
-2019-10-29 20:02:46,965 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:46,966 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:46,968 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:47,164 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:47,164 - QThread - update - INFO - 1572350567.1642969
-2019-10-29 20:02:47,171 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:47,176 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:47,180 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:47,366 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:47,366 - QThread - update - INFO - 1572350567.366088
-2019-10-29 20:02:47,371 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:47,376 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:47,380 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:47,567 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:47,567 - QThread - update - INFO - 1572350567.5671484
-2019-10-29 20:02:47,568 - Window - INFO - sine f is plotted!
-2019-10-29 20:02:47,570 - Window - INFO - cosine f is plotted!
-2019-10-29 20:02:47,571 - Window - INFO - tan f is plotted!
-2019-10-29 20:02:47,785 - QThread - run - INFO - running qthread!
-2019-10-29 20:02:47,785 - QThread - update - INFO - 1572350567.785266
+2019-11-03 17:36:48,059 - QThread - update - INFO - 1572773808.0588157
+2019-11-03 17:36:48,067 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:48,074 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:48,260 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:48,262 - QThread - update - INFO - 1572773808.2623317
+2019-11-03 17:36:48,269 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:48,275 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:48,280 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:48,462 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:48,464 - QThread - update - INFO - 1572773808.4647915
+2019-11-03 17:36:48,469 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:48,471 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:48,472 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:48,668 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:48,672 - QThread - update - INFO - 1572773808.6726232
+2019-11-03 17:36:48,676 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:48,682 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:48,686 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:48,873 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:48,873 - QThread - update - INFO - 1572773808.8730958
+2019-11-03 17:36:48,875 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:48,877 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:48,879 - Window - INFO - tan f is plotted!
+2019-11-03 17:36:49,073 - QThread - run - INFO - running qthread!
+2019-11-03 17:36:49,073 - QThread - update - INFO - 1572773809.0735543
+2019-11-03 17:36:49,104 - Window - INFO - sine f is plotted!
+2019-11-03 17:36:49,106 - Window - INFO - cosine f is plotted!
+2019-11-03 17:36:49,107 - Window - INFO - tan f is plotted!
