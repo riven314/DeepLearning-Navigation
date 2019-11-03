@@ -28,3 +28,12 @@
 2019-10-30 22:39:54,907 | Window | init_rgbd_layout | INFO | widget setup complete
 2019-10-30 22:39:55,761 | Window | init_thread | INFO | framing thread setup complete
 2019-10-30 22:39:55,945 | Window | __init__ | INFO | window setup complete
+2019-11-03 17:02:13,222 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-03 17:02:14,069 | Window | init_thread | INFO | framing thread setup complete
+2019-11-03 17:02:14,392 | Window | __init__ | INFO | window setup complete
+2019-11-03 17:02:31,438 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-03 17:02:32,220 | Window | init_thread | INFO | framing thread setup complete
+2019-11-03 17:02:32,404 | Window | __init__ | INFO | window setup complete
+2019-11-03 17:03:15,457 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-03 17:03:16,235 | Window | init_thread | INFO | framing thread setup complete
+2019-11-03 17:03:16,421 | Window | __init__ | INFO | window setup complete

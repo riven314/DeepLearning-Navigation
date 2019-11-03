@@ -1,8 +1,8 @@
 """
 PROCEDURES:
-1. SET 3 WINDOWS
-2. PRINT OUT RGB AND DEPTH IMAGE
-3. TRY OUT SEGMENTATION MODEL
+1. fix the speed issue
+2. refactor the code
+3. repull the github repo
 
 QUESTIONS:
 1. how to unprint required logging level below
@@ -124,6 +124,7 @@ class FrameThread(QThread):
         self.align = rs.align(rs.stream.color)
         self.colorizer = rs.colorizer()
         self.frame_store = FrameStore()
+        self.mobilenet = model
     
     def run(self):
         #ptvsd.debug_this_thread()
@@ -135,11 +136,21 @@ class FrameThread(QThread):
             color_image = np.asanyarray(rgb_frame.get_data())
             #depth_image = np.asanyarray(depth_frame.get_data())
             depth_colormap = np.asanyarray(self.colorizer.colorize(depth_frame).get_data())
+            seg_out = self.predict_seg(color_image)
             #display_image = np.concatenate((color_image, depth_colormap), axis=1)
             # store key data at a snapshot
             self.frame_store.rgb_img = color_image
             self.frame_store.depth_img = depth_colormap
+            self.frame_store.seg_out = seg_out
             self.frame_signal.emit(self.frame_store)
+
+    def predict_seg(self, rgb_img):
+        Iamge = IamgeLoad(rgb_img, WIDTH, HEIGHT)
+        predictions = predict(model, Iamge, RESIZE_NUM ,gpu=0)
+        _, pred_color = process_predict(predictions, colors, names)
+        #qimg = convert_qimg(pred_color)
+        #self.seg_label.setPixmap(QtGui.QPixmap.fromImage(qimg))
+        return pred_color
 
 
 class Window(QWidget):
@@ -167,9 +178,9 @@ class Window(QWidget):
 
     def init_thread(self):
         self.f_thread = FrameThread()
-        self.f_thread.frame_signal.connect(lambda np_img: self.display_pixmap(np_img, 'rgb'))
-        self.f_thread.frame_signal.connect(lambda np_img: self.display_pixmap(np_img, 'depth'))
-        self.f_thread.frame_signal.connect(self.run_mobilenet)
+        self.f_thread.frame_signal.connect(lambda frame_store: self.display_pixmap(frame_store, 'rgb'))
+        self.f_thread.frame_signal.connect(lambda frame_store: self.display_pixmap(frame_store, 'depth'))
+        self.f_thread.frame_signal.connect(lambda frame_store: self.display_pixmap(frame_store, 'seg'))
         self.logger.info('framing thread setup complete')
         self.f_thread.start()
 
