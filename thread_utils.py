@@ -3,6 +3,7 @@ do heavy lifting job on threading for pyqt5 interface
 
 ISSUE:
 1. received frame is RGB or BGR??
+2. how to profile multithreading application?
 """
 import os
 import sys
@@ -31,7 +32,8 @@ class FrameStore:
     """
     def __init__(self):
         self.rgb_img = None
-        self.depth_img = None
+        self.depth_1c_img = None
+        self.depth_3c_img = None
         self.seg_out = None
         
 
@@ -58,6 +60,7 @@ class FrameThread(QThread):
         self.colorizer = rs.colorizer()
         # model related
         self.model_config = ModelMetaConfig()
+        self.IS_SILENT = True
         # passing to interface
         self.frame_store = FrameStore()
     
@@ -69,13 +72,14 @@ class FrameThread(QThread):
             rgb_frame = frames.get_color_frame() # uint 8
             depth_frame = frames.get_depth_frame() # unit 8
             color_image = np.asanyarray(rgb_frame.get_data())
-            #depth_image = np.asanyarray(depth_frame.get_data())
+            depth_image = np.asanyarray(depth_frame.get_data())
             depth_colormap = np.asanyarray(self.colorizer.colorize(depth_frame).get_data())
-            seg_out = self.model_config.raw_predict(color_image)
-            seg_out = self.model_config.process_predict(seg_out)
+            seg_out = self.model_config.raw_predict(color_image, is_silent = self.IS_SILENT)
+            seg_out = self.model_config.process_predict(seg_out, is_silent = self.IS_SILENT)
             #display_image = np.concatenate((color_image, depth_colormap), axis=1)
             # store key data at a snapshot
             self.frame_store.rgb_img = color_image
-            self.frame_store.depth_img = depth_colormap
+            self.frame_store.depth_1c_img = depth_image
+            self.frame_store.depth_3c_img = depth_colormap
             self.frame_store.seg_out = seg_out
             self.frame_signal.emit(self.frame_store)

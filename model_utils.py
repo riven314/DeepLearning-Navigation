@@ -36,6 +36,9 @@ class ModelMetaConfig:
         print('model configuration completed!')
 
     def prepare_colors(self):
+        """
+        color is in BGR (NOT RBG!)
+        """
         colors = loadmat(self.COLOR_FILE)['colors']
         self.colors = colors
 
@@ -51,13 +54,14 @@ class ModelMetaConfig:
     def prepare_model(self):
         # set GPU mode by default
         self.model = setup_model(self.CFG_FILE, self.ROOT, gpu = 0)
+        self.model.eval()
 
     def _sanity_check(self):
         assert os.path.isfile(self.COLOR_FILE), 'COLOR_FILE doesnt exist'
         assert os.path.isfile(self.COLOR2OBJ_FILE), 'COLOR2OBJ_FILE doesnt exist'
         assert os.path.isfile(self.CFG_FILE), 'CFG_FILE doesnt exist'
         
-    def raw_predict(self, img):
+    def raw_predict(self, img, is_silent = True):
         """
         do model prediction, output raw model prediction
 
@@ -67,15 +71,15 @@ class ModelMetaConfig:
             pred -- np array, raw model prediction (with proability and class index)
         """
         width, height = self.RESIZE
-        img = ImageLoad(img, width, height)
-        pred = predict(self.model, img, self.ENSEMBLE_N, gpu = 0)
+        img = ImageLoad(img, width, height, is_silent = is_silent)
+        pred = predict(self.model, img, self.ENSEMBLE_N, is_silent = is_silent, gpu = 0)
         return pred
 
-    def process_predict(self, pred):
+    def process_predict(self, pred, is_silent):
         """
         process raw model prediction into readable segmentation image
         """
-        _, pred_color = process_predict(pred, self.colors, self.names)
+        _, pred_color = process_predict(pred, self.colors, self.names, is_silent = is_silent)
         return pred_color
 
     
@@ -84,11 +88,13 @@ if __name__ == '__main__':
     DATA_PATH = os.path.join(os.getcwd(), 'mobilenet_segment', 'test_set', 'cls1_rgb.npy')
     img = np.load(DATA_PATH)
     img = img[:,:,::-1]
+    print('image shape = {}'.format(img.shape))
     plt.imshow(img)
     plt.show()
     x = ModelMetaConfig()
-    pred = x.raw_predict(img)
-    color_pred = x.process_predict(pred)
+    for i in range(5):
+        pred = x.raw_predict(img, is_silent = False)
+        color_pred = x.process_predict(pred, is_silent = False)
     plt.imshow(color_pred)
     plt.show()
     
