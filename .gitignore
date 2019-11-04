@@ -4,5 +4,9 @@
 /d435_module/__pycache__/*
 /examples/__pycache__
 /test/__pycache__
-/mobilenet_segment/*
+/mobilenet_segment/__pycache__/*
+/mobilenet_segment/ckpt
+/mobilenet_segment/data
+/mobilenet_segment/teaser
+/mobilenet_segment/test_set
 
