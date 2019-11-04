@@ -15,7 +15,7 @@ import cv2
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 import pyrealsense2 as rs
 
-from d435_module.camera_config import RGBDhandler
+from d435_camera.camera_config import RGBDhandler
 from model_utils import ModelMetaConfig
 
 class FrameStore:

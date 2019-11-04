@@ -25,7 +25,7 @@ from PyQt5.QtGui import QImage, QColor
 from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
 
-from d435_module.camera_config import RGBDhandler
+from d435_camera.camera_config import RGBDhandler
 from thread_utils import FrameStore, FrameThread
 from pyqt_utils import convert_qimg
 from profiler import profile
