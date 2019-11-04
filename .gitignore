@@ -5,5 +5,4 @@
 /examples/__pycache__
 /test/__pycache__
 /mobilenet_segment/*
-!*/mobilenet_segment/inference.py
 
