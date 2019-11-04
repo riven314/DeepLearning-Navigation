@@ -13,7 +13,7 @@ from scipy.io import loadmat
 import csv
 from torchvision import transforms
 
-from mobilenet_segment.webcam_test import ImageLoad, setup_model, predict, process_predict
+from mobilenet_segment.inference import ImageLoad, setup_model, predict, process_predict
 #from config.defaults import _C as cfg
 
 class ModelMetaConfig:
