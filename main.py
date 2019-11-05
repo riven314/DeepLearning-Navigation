@@ -5,18 +5,22 @@ PROCEDURES:
 3. repull the github repo
 
 QUESTIONS:
-1. how to unprint required logging level below
+1. how to silent message from unrequired logging level
 2. consolidate all configurations
-3. very CPU intensive (100%), why?
+3. very CPU intensive (100%), why? (speed issue)
+4. calibration on depth camera (or post filtering on depth frame)
+5. how to make image fit to the grid just right?
+
+REFERENCE:
+1. make pyqt5 stylish and modern: https://github.com/gmarull/qtmodern
+2. pyqt5 GUI template: https://github.com/chrschorn/pyqt-gui-template
+3. pyqt5 project collary: https://www.learnpyqt.com/apps/
+4. pyqt5 examples demos: https://github.com/pyqt/examples
 """
 import os
 import sys
 import time
 import logging
-
-# suppress unknown warning (e.g. QWindowsContext: OleInitialize() failed)
-import warnings
-warnings.simplefilter("ignore", UserWarning)
 
 import numpy as np
 import cv2
@@ -24,6 +28,9 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QImage, QColor
 from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
+# stylise pyqt5 interface
+import qtmodern.styles
+import qtmodern.windows
 
 from d435_camera.camera_config import RGBDhandler
 from thread_utils import FrameStore, FrameThread
@@ -52,13 +59,14 @@ class Window(QWidget):
         self.width = 1280
         self.height = 1280
         self.init_window()
+        self.init_thread()
         self.logger.info('window setup complete')
 
     def init_window(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
         self.init_rgbd_layout()
-        self.init_thread()
+        #self.init_thread()
         self.show()
 
     def init_thread(self):
@@ -76,16 +84,18 @@ class Window(QWidget):
     def init_rgbd_layout(self):
         vbox_layout = QVBoxLayout()
         # set up label
+        WIDGET_WIDTH = 484 # 484
+        WIDGET_HEIGHT = 240 # 240
         rgb_label = QLabel(self)
-        rgb_label.resize(484, 240)
+        rgb_label.resize(WIDGET_WIDTH, WIDGET_HEIGHT)
         rgb_title = QLabel('RGB Image')
         depth_label = QLabel(self)
-        depth_label.resize(484, 240)
+        depth_label.resize(WIDGET_WIDTH, WIDGET_HEIGHT)
         depth_label.setObjectName('depth')
         depth_label.mousePressEvent = self.query_depth
         depth_title = QLabel('Depth Image')
         seg_label = QLabel(self)
-        seg_label.resize(484, 240)
+        seg_label.resize(WIDGET_WIDTH, WIDGET_HEIGHT)
         # set mouse interactive on segmentation widget
         seg_label.setObjectName('seg')
         seg_label.mousePressEvent = self.query_segment
@@ -152,11 +162,11 @@ class Window(QWidget):
         print('x = {}; y = {}; distance = {}'.format(x, y, distance))
 
 
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    form = Window()
-    form.show()
+    win = Window()
+    qtmodern.styles.dark(app)
+    win_modern = qtmodern.windows.ModernWindow(win)
+    win_modern.show()
     sys.exit(app.exec_())
 
