@@ -4,6 +4,12 @@ PROCEDURES:
 2. refactor the code
 3. repull the github repo
 
+TO BE DONE:
+1. refactor + layout work
+2. print (object, distance) with mouse click
+3. model speed issue
+4. smoothen / better depth map
+
 QUESTIONS:
 1. how to silent message from unrequired logging level
 2. consolidate all configurations
