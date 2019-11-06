@@ -89,12 +89,12 @@ if __name__ == '__main__':
     img = np.load(DATA_PATH)
     img = img[:,:,::-1]
     print('image shape = {}'.format(img.shape))
-    plt.imshow(img)
-    plt.show()
+    #plt.imshow(img)
+    #plt.show()
     x = ModelMetaConfig()
-    for i in range(5):
+    for i in range(100):
         pred = x.raw_predict(img, is_silent = False)
         color_pred = x.process_predict(pred, is_silent = False)
-    plt.imshow(color_pred)
-    plt.show()
+    #plt.imshow(color_pred)
+    #plt.show()
     

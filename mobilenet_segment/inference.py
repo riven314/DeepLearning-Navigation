@@ -71,8 +71,9 @@ def ImageLoad(data, width, height, is_silent):
         #image transform, to torch float tensor 3xHxW
         img_resized=np.float32(img_resize)/255
         img_resized=img_resized.transpose((2,0,1))
-        # it is in CPU mode!
+        # send to GPU earlier leads to speed up + more CPU efficient
         img_resized=normalize(torch.from_numpy(img_resized.copy()).to(device))
+        # it is in CPU mode!
         #img_resized=normalize(torch.from_numpy(img_resized.copy()))
 
         img_resized=torch.unsqueeze(img_resized,0)
@@ -254,7 +255,7 @@ if __name__ == '__main__':
     Image = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
-    for i in range(15):
+    for i in range(5):
         predictions = predict(model, Image, RESIZE_N, gpu=0, is_silent = False)
         seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
     #np.save('test_result.npy',pred_color) 
