@@ -9,4 +9,11 @@
 /mobilenet_segment/data/*
 /mobilenet_segment/teaser/*
 /mobilenet_segment/test_set/*
+/mobilenet_segment/config/__pycache__/*
+/mobilenet_segment/lib/__pycache__/*
+/mobilenet_segment/models/__pycache__/*
+/mobilenet_segment/lib/utils/__pycache__/*
+/mobilenet_segment/lib/nn/__pycache__/*
+/mobilenet_segment/lib/nn/modules/__pycache__/*
+/mobilenet_segment/lib/nn/parallel/__pycache__/*
 
