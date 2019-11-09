@@ -67,6 +67,7 @@ class FrameThread(QThread):
     def run(self):
         #ptvsd.debug_this_thread()
         while True:
+            #print('time 1 = {}'.format(time.time()))
             frames = self.rs_camera.pipeline.wait_for_frames()
             frames = self.align.process(frames)
             rgb_frame = frames.get_color_frame() # uint 8
@@ -74,9 +75,11 @@ class FrameThread(QThread):
             color_image = np.asanyarray(rgb_frame.get_data())
             depth_image = np.asanyarray(depth_frame.get_data())
             depth_colormap = np.asanyarray(self.colorizer.colorize(depth_frame).get_data())
+            #print('time 2 = {}'.format(time.time()))
             seg_out = self.model_config.raw_predict(color_image, is_silent = self.IS_SILENT)
             seg_out = self.model_config.process_predict(seg_out, is_silent = self.IS_SILENT)
-            #display_image = np.concatenate((color_image, depth_colormap), axis=1)
+            #print('time 3 = {}'.format(time.time()))
+            display_image = np.concatenate((color_image, depth_colormap), axis=1)
             # store key data at a snapshot
             self.frame_store.rgb_img = color_image
             self.frame_store.depth_1c_img = depth_image

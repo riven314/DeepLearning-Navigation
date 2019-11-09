@@ -24,6 +24,7 @@ from torchvision import transforms
 assert LooseVersion(torch.__version__) >= LooseVersion('0.4.0'), \
         'PyTorch>=0.4.0 is required'
 
+
 def ImageLoad(data, width, height, is_silent):
     """
     read the image data and resize it.
@@ -44,7 +45,7 @@ def ImageLoad(data, width, height, is_silent):
     # PIL.Image.fromarray is slow!
     img = Image.fromarray(data)
     #change the image size
-    img=img.resize((width,height), resample = Image.BILINEAR)
+    img = img.resize((width,height), resample = Image.BILINEAR)
     ori_width, ori_height = img.size
     
     device = torch.device("cuda", 0)
@@ -107,7 +108,6 @@ def visualize_result(pred, colors, names, is_silent):
         if ratio > 0.1:
             print("  {}: {:.2f}%".format(name, ratio))
     return pred_color
-    
     
     
 def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):

@@ -14,6 +14,7 @@ import csv
 from torchvision import transforms
 
 from mobilenet_segment.inference import ImageLoad, setup_model, predict, process_predict
+from profiler import profile
 #from config.defaults import _C as cfg
 
 class ModelMetaConfig:
@@ -60,7 +61,7 @@ class ModelMetaConfig:
         assert os.path.isfile(self.COLOR_FILE), 'COLOR_FILE doesnt exist'
         assert os.path.isfile(self.COLOR2OBJ_FILE), 'COLOR2OBJ_FILE doesnt exist'
         assert os.path.isfile(self.CFG_FILE), 'CFG_FILE doesnt exist'
-        
+    
     def raw_predict(self, img, is_silent = True):
         """
         do model prediction, output raw model prediction
@@ -71,7 +72,9 @@ class ModelMetaConfig:
             pred -- np array, raw model prediction (with proability and class index)
         """
         width, height = self.RESIZE
+        start = time.time()
         img = ImageLoad(img, width, height, is_silent = is_silent)
+        start = time.time()
         pred = predict(self.model, img, self.ENSEMBLE_N, is_silent = is_silent, gpu = 0)
         return pred
 
@@ -92,8 +95,8 @@ if __name__ == '__main__':
     #plt.imshow(img)
     #plt.show()
     x = ModelMetaConfig()
-    for i in range(100):
-        pred = x.raw_predict(img, is_silent = False)
+    for i in range(10):
+        pred = x.raw_predict(img, is_silent = True)
         color_pred = x.process_predict(pred, is_silent = False)
     #plt.imshow(color_pred)
     #plt.show()
