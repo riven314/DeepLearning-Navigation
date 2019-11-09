@@ -1,3 +1,11 @@
+"""
+guide on speeding up and unit testing:
+1. if PIL is used, truncate image list (5 copy -> 3 copy)
+2. use cv2.resize instead (may affect segmentation result)
+3. add more unit test cases on segmentation result if cv2.resize is used
+4. try to parallelize resize
+5. double check if upsampling is down for small image
+"""
 # System libs
 import os
 import argparse
@@ -54,7 +62,7 @@ def ImageLoad(data, width, height, is_silent):
 
     device = torch.device("cuda", 0)
     p=8 #padding_constant value
-    imgSizes=[300,375,450,525,600] 
+    imgSizes=[300,375,450,525,600] # [300,375,450,525,600]
     imgMaxSize=1000
     #  above three value are got from cfg file  
     
@@ -64,11 +72,12 @@ def ImageLoad(data, width, height, is_silent):
         scale=min(this_short_size/float(min(ori_height, ori_width)),
                   imgMaxSize/float(max(ori_height,ori_width)))
         target_height, target_width=int(ori_height*scale), int(ori_width*scale)
+        #print('target_height = {}, target_width = {}'.format(target_height, target_width))
         
         #to avoid rounding in network
         # Round x to the nearest multiple of p and x' >= x
         target_width=((target_width-1)//p+1)*p
-        target_width=((target_height-1)//p+1)*p
+        target_height=((target_height-1)//p+1)*p
         
         #resize images
         img_resize=img.resize((target_width, target_height), resample = Image.BILINEAR)
