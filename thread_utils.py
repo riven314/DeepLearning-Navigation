@@ -67,7 +67,7 @@ class FrameThread(QThread):
     def run(self):
         #ptvsd.debug_this_thread()
         while True:
-            #print('time 1 = {}'.format(time.time()))
+            print('time 1 = {}'.format(time.time()))
             frames = self.rs_camera.pipeline.wait_for_frames()
             frames = self.align.process(frames)
             rgb_frame = frames.get_color_frame() # uint 8

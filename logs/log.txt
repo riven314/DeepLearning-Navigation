@@ -235,3 +235,6 @@
 2019-11-08 21:58:14,712 | Window | init_rgbd_layout | INFO | widget setup complete
 2019-11-08 21:58:18,472 | Window | init_thread | INFO | framing thread setup complete
 2019-11-08 21:58:18,472 | Window | __init__ | INFO | window setup complete
+2019-11-09 16:11:51,861 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-09 16:11:55,681 | Window | init_thread | INFO | framing thread setup complete
+2019-11-09 16:11:55,681 | Window | __init__ | INFO | window setup complete

@@ -64,7 +64,8 @@ class ModelMetaConfig:
     
     def raw_predict(self, img, is_silent = True):
         """
-        do model prediction, output raw model prediction
+        do model prediction, output raw model prediction.
+        speed on ImageLoad: 0.03s - 0.4s
 
         input:
             img -- np array
@@ -72,9 +73,7 @@ class ModelMetaConfig:
             pred -- np array, raw model prediction (with proability and class index)
         """
         width, height = self.RESIZE
-        start = time.time()
         img = ImageLoad(img, width, height, is_silent = is_silent)
-        start = time.time()
         pred = predict(self.model, img, self.ENSEMBLE_N, is_silent = is_silent, gpu = 0)
         return pred
 
@@ -92,12 +91,12 @@ if __name__ == '__main__':
     img = np.load(DATA_PATH)
     img = img[:,:,::-1]
     print('image shape = {}'.format(img.shape))
-    #plt.imshow(img)
-    #plt.show()
+    plt.imshow(img)
+    plt.show()
     x = ModelMetaConfig()
-    for i in range(10):
+    for i in range(5):
         pred = x.raw_predict(img, is_silent = True)
         color_pred = x.process_predict(pred, is_silent = False)
-    #plt.imshow(color_pred)
-    #plt.show()
+    plt.imshow(color_pred)
+    plt.show()
     

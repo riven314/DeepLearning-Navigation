@@ -20,10 +20,10 @@ from config import cfg
 import time
 from profiler import profile
 from torchvision import transforms
+import cv2
 
 assert LooseVersion(torch.__version__) >= LooseVersion('0.4.0'), \
         'PyTorch>=0.4.0 is required'
-
 
 def ImageLoad(data, width, height, is_silent):
     """
@@ -45,9 +45,13 @@ def ImageLoad(data, width, height, is_silent):
     # PIL.Image.fromarray is slow!
     img = Image.fromarray(data)
     #change the image size
-    img = img.resize((width,height), resample = Image.BILINEAR)
+    img=img.resize((width,height), resample = Image.BILINEAR)
     ori_width, ori_height = img.size
-    
+    #[cv2 approach]
+    #img = data
+    #img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
+    #ori_height, ori_width, _ = img.shape
+
     device = torch.device("cuda", 0)
     p=8 #padding_constant value
     imgSizes=[300,375,450,525,600] 
@@ -68,6 +72,8 @@ def ImageLoad(data, width, height, is_silent):
         
         #resize images
         img_resize=img.resize((target_width, target_height), resample = Image.BILINEAR)
+        #[cv2 approach]
+        #img_resize = cv2.resize(img, (target_width, target_height), interpolation = cv2.INTER_LINEAR)
         
         #image transform, to torch float tensor 3xHxW
         img_resized=np.float32(img_resize)/255
@@ -108,6 +114,7 @@ def visualize_result(pred, colors, names, is_silent):
         if ratio > 0.1:
             print("  {}: {:.2f}%".format(name, ratio))
     return pred_color
+    
     
     
 def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
@@ -255,7 +262,7 @@ if __name__ == '__main__':
     Image = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
-    for i in range(5):
+    for i in range(10):
         predictions = predict(model, Image, RESIZE_N, gpu=0, is_silent = False)
         seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
     #np.save('test_result.npy',pred_color) 
