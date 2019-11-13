@@ -253,3 +253,12 @@
 2019-11-09 16:51:30,857 | Window | init_rgbd_layout | INFO | widget setup complete
 2019-11-09 16:51:34,663 | Window | init_thread | INFO | framing thread setup complete
 2019-11-09 16:51:34,663 | Window | __init__ | INFO | window setup complete
+2019-11-13 22:52:40,989 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-13 22:52:44,900 | Window | init_thread | INFO | framing thread setup complete
+2019-11-13 22:52:44,901 | Window | __init__ | INFO | window setup complete
+2019-11-13 22:53:43,874 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-13 22:53:47,738 | Window | init_thread | INFO | framing thread setup complete
+2019-11-13 22:53:47,738 | Window | __init__ | INFO | window setup complete
+2019-11-13 22:55:01,684 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-13 22:55:05,503 | Window | init_thread | INFO | framing thread setup complete
+2019-11-13 22:55:05,503 | Window | __init__ | INFO | window setup complete

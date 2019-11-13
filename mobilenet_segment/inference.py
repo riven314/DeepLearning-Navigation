@@ -102,7 +102,7 @@ def ImageLoad(data, width, height, is_silent):
     output['img_data']=[x.contiguous() for x in img_resized_list]
     return output
 
-        
+
 def visualize_result(pred, colors, names, is_silent):
     """
     input: the predictions (np.array), shape is (height, width)
@@ -114,7 +114,7 @@ def visualize_result(pred, colors, names, is_silent):
     pixs = pred.size
     uniques, counts = np.unique(pred, return_counts=True)
     # colorize prediction
-    pred_color = colorEncode(pred, colors).astype(np.uint8)
+    pred_color = colorEncode(pred, colors).astype(np.uint8) # this spends time
     if is_silent:
         return pred_color
     for idx in np.argsort(counts)[::-1]:
