@@ -68,7 +68,7 @@ def ImageLoad(data, width, height, is_silent):
         #to avoid rounding in network
         # Round x to the nearest multiple of p and x' >= x
         target_width=((target_width-1)//p+1)*p
-        target_width=((target_height-1)//p+1)*p
+        target_height=((target_height-1)//p+1)*p
         
         #resize images
         img_resize=img.resize((target_width, target_height), resample = Image.BILINEAR)
@@ -93,7 +93,7 @@ def ImageLoad(data, width, height, is_silent):
     output['img_data']=[x.contiguous() for x in img_resized_list]
     return output
 
-        
+       
 def visualize_result(pred, colors, names, is_silent):
     """
     input: the predictions (np.array), shape is (height, width)
@@ -243,6 +243,7 @@ def InferDist(depth, seg, x,y,r):
 
 if __name__ == '__main__':
     #Define the color dict
+    import matplotlib.pyplot as plt
     WIDTH = 484
     HEIGHT = 240
     RESIZE_N = 3
@@ -256,8 +257,9 @@ if __name__ == '__main__':
             names[int(row[0])] = row[5].split(";")[0]        
         
     #take cls.npy as an example
-    data = np.load('test_set/cls1_rgb.npy')    
-    cfg_path = "config/ade20k-mobilenetv2dilated-c1_deepsup.yaml"
+    data = np.load(os.path.join('test_set', 'cls1_rgb.npy'))
+    data = data[:, :, ::-1]
+    cfg_path = os.path.join('config', 'ade20k-mobilenetv2dilated-c1_deepsup.yaml')
     #cfg_path="config/ade20k-resnet18dilated-ppm_deepsup.yaml"
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
@@ -268,7 +270,9 @@ if __name__ == '__main__':
         end = time.time()
         print('process+predict: {}s'.format(end - start))
         start = time.time()
-        seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
+        seg,pred_color = process_predict(predictions, colors, names, is_silent = True)
         end = time.time()
         print('visualize: {}s'.format(end - start))
+    plt.imshow(pred_color)
+    plt.show()
     #np.save('test_result.npy',pred_color) 
