@@ -1,11 +1,3 @@
-"""
-guide on speeding up and unit testing:
-1. if PIL is used, truncate image list (5 copy -> 3 copy)
-2. use cv2.resize instead (may affect segmentation result)
-3. add more unit test cases on segmentation result if cv2.resize is used
-4. try to parallelize resize
-5. double check if upsampling is down for small image
-"""
 # System libs
 import os
 import argparse
@@ -62,7 +54,7 @@ def ImageLoad(data, width, height, is_silent):
 
     device = torch.device("cuda", 0)
     p=8 #padding_constant value
-    imgSizes=[300,375,450,525,600] # [300,375,450,525,600]
+    imgSizes=[300,375,450,525,600] 
     imgMaxSize=1000
     #  above three value are got from cfg file  
     
@@ -72,12 +64,11 @@ def ImageLoad(data, width, height, is_silent):
         scale=min(this_short_size/float(min(ori_height, ori_width)),
                   imgMaxSize/float(max(ori_height,ori_width)))
         target_height, target_width=int(ori_height*scale), int(ori_width*scale)
-        #print('target_height = {}, target_width = {}'.format(target_height, target_width))
         
         #to avoid rounding in network
         # Round x to the nearest multiple of p and x' >= x
         target_width=((target_width-1)//p+1)*p
-        target_height=((target_height-1)//p+1)*p
+        target_width=((target_height-1)//p+1)*p
         
         #resize images
         img_resize=img.resize((target_width, target_height), resample = Image.BILINEAR)
@@ -102,7 +93,7 @@ def ImageLoad(data, width, height, is_silent):
     output['img_data']=[x.contiguous() for x in img_resized_list]
     return output
 
-
+        
 def visualize_result(pred, colors, names, is_silent):
     """
     input: the predictions (np.array), shape is (height, width)
@@ -114,7 +105,7 @@ def visualize_result(pred, colors, names, is_silent):
     pixs = pred.size
     uniques, counts = np.unique(pred, return_counts=True)
     # colorize prediction
-    pred_color = colorEncode(pred, colors).astype(np.uint8) # this spends time
+    pred_color = colorEncode(pred, colors).astype(np.uint8)
     if is_silent:
         return pred_color
     for idx in np.argsort(counts)[::-1]:
@@ -126,11 +117,11 @@ def visualize_result(pred, colors, names, is_silent):
     
     
     
-def predict(model, image_load, resizeNum, is_silent, gpu=0):
+def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
     """
     input:
     model: model
-    image_load: A dict of image, which has two keys: 'img_ori' and 'img_data'
+    ImageLoad: A dict of image, which has two keys: 'img_ori' and 'img_data'
     the value of the key 'img_ori' means the original numpy array
     the value of the key 'img_data' is the list of five resize images 
     
@@ -138,15 +129,15 @@ def predict(model, image_load, resizeNum, is_silent, gpu=0):
     the mean predictions of the resize image list: 'img_data' 
     """
     starttime = time.time()
-    segSize = (image_load['img_ori'].shape[0],
-               image_load['img_ori'].shape[1])
+    segSize = (ImageLoad['img_ori'].shape[0],
+               ImageLoad['img_ori'].shape[1])
     #print('segSize',segSize)
-    img_resized_list = image_load['img_data']
+    img_resized_list = ImageLoad['img_data']
     with torch.no_grad():
         scores = torch.zeros(1, cfg.DATASET.num_class, segSize[0], segSize[1], device=torch.device("cuda", gpu))
         
         for img in img_resized_list[:resizeNum]:
-            feed_dict = image_load.copy()
+            feed_dict = ImageLoad.copy()
             feed_dict['img_data']=img
             del feed_dict['img_ori']
             feed_dict=async_copy_to(feed_dict, gpu)
@@ -252,8 +243,7 @@ def InferDist(depth, seg, x,y,r):
 
 if __name__ == '__main__':
     #Define the color dict
-    import matplotlib.pyplot as plt
-    WIDTH = 484 # 484
+    WIDTH = 484
     HEIGHT = 240
     RESIZE_N = 3
     colors = loadmat('data/color150.mat')['colors']
@@ -266,24 +256,19 @@ if __name__ == '__main__':
             names[int(row[0])] = row[5].split(";")[0]        
         
     #take cls.npy as an example
-    data = np.load('test_set/cls1_rgb.npy')
-    data = data[:, :, ::-1]
-    #plt.imshow(data)
-    #plt.show()
+    data = np.load('test_set/cls1_rgb.npy')    
     cfg_path = "config/ade20k-mobilenetv2dilated-c1_deepsup.yaml"
     #cfg_path="config/ade20k-resnet18dilated-ppm_deepsup.yaml"
-    Image = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
     for i in range(10):
         start = time.time()
-        predictions = predict(model, Image, RESIZE_N, gpu = 0, is_silent = True)
+        img = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
+        predictions = predict(model, img, RESIZE_N, gpu=0, is_silent = False)
         end = time.time()
-        print('process + prediction: {}s'.format(end - start))
+        print('process+predict: {}s'.format(end - start))
         start = time.time()
-        seg, pred_color = process_predict(predictions, colors, names, is_silent = True)
+        seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
         end = time.time()
-        print('visualize = {} s'.format(end - start))
-    plt.imshow(pred_color)
-    plt.show()
+        print('visualize: {}s'.format(end - start))
     #np.save('test_result.npy',pred_color) 

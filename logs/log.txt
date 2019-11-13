@@ -238,27 +238,6 @@
 2019-11-09 16:11:51,861 | Window | init_rgbd_layout | INFO | widget setup complete
 2019-11-09 16:11:55,681 | Window | init_thread | INFO | framing thread setup complete
 2019-11-09 16:11:55,681 | Window | __init__ | INFO | window setup complete
-2019-11-09 16:37:25,672 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-09 16:37:29,597 | Window | init_thread | INFO | framing thread setup complete
-2019-11-09 16:37:29,597 | Window | __init__ | INFO | window setup complete
-2019-11-09 16:39:17,699 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-09 16:39:21,429 | Window | init_thread | INFO | framing thread setup complete
-2019-11-09 16:39:21,429 | Window | __init__ | INFO | window setup complete
-2019-11-09 16:49:24,182 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-09 16:49:28,029 | Window | init_thread | INFO | framing thread setup complete
-2019-11-09 16:49:28,029 | Window | __init__ | INFO | window setup complete
-2019-11-09 16:50:09,126 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-09 16:50:12,983 | Window | init_thread | INFO | framing thread setup complete
-2019-11-09 16:50:12,983 | Window | __init__ | INFO | window setup complete
-2019-11-09 16:51:30,857 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-09 16:51:34,663 | Window | init_thread | INFO | framing thread setup complete
-2019-11-09 16:51:34,663 | Window | __init__ | INFO | window setup complete
-2019-11-13 22:52:40,989 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-13 22:52:44,900 | Window | init_thread | INFO | framing thread setup complete
-2019-11-13 22:52:44,901 | Window | __init__ | INFO | window setup complete
-2019-11-13 22:53:43,874 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-13 22:53:47,738 | Window | init_thread | INFO | framing thread setup complete
-2019-11-13 22:53:47,738 | Window | __init__ | INFO | window setup complete
-2019-11-13 22:55:01,684 | Window | init_rgbd_layout | INFO | widget setup complete
-2019-11-13 22:55:05,503 | Window | init_thread | INFO | framing thread setup complete
-2019-11-13 22:55:05,503 | Window | __init__ | INFO | window setup complete
+2019-11-13 23:26:56,516 | Window | init_rgbd_layout | INFO | widget setup complete
+2019-11-13 23:27:00,493 | Window | init_thread | INFO | framing thread setup complete
+2019-11-13 23:27:00,493 | Window | __init__ | INFO | window setup complete
