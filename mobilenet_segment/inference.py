@@ -126,11 +126,11 @@ def visualize_result(pred, colors, names, is_silent):
     
     
     
-def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
+def predict(model, image_load, resizeNum, is_silent, gpu=0):
     """
     input:
     model: model
-    ImageLoad: A dict of image, which has two keys: 'img_ori' and 'img_data'
+    image_load: A dict of image, which has two keys: 'img_ori' and 'img_data'
     the value of the key 'img_ori' means the original numpy array
     the value of the key 'img_data' is the list of five resize images 
     
@@ -138,15 +138,15 @@ def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
     the mean predictions of the resize image list: 'img_data' 
     """
     starttime = time.time()
-    segSize = (ImageLoad['img_ori'].shape[0],
-               ImageLoad['img_ori'].shape[1])
+    segSize = (image_load['img_ori'].shape[0],
+               image_load['img_ori'].shape[1])
     #print('segSize',segSize)
-    img_resized_list = ImageLoad['img_data']
+    img_resized_list = image_load['img_data']
     with torch.no_grad():
         scores = torch.zeros(1, cfg.DATASET.num_class, segSize[0], segSize[1], device=torch.device("cuda", gpu))
         
         for img in img_resized_list[:resizeNum]:
-            feed_dict = ImageLoad.copy()
+            feed_dict = image_load.copy()
             feed_dict['img_data']=img
             del feed_dict['img_ori']
             feed_dict=async_copy_to(feed_dict, gpu)
@@ -252,7 +252,8 @@ def InferDist(depth, seg, x,y,r):
 
 if __name__ == '__main__':
     #Define the color dict
-    WIDTH = 484
+    import matplotlib.pyplot as plt
+    WIDTH = 484 # 484
     HEIGHT = 240
     RESIZE_N = 3
     colors = loadmat('data/color150.mat')['colors']
@@ -265,13 +266,24 @@ if __name__ == '__main__':
             names[int(row[0])] = row[5].split(";")[0]        
         
     #take cls.npy as an example
-    data = np.load('test_set/cls1_rgb.npy')    
+    data = np.load('test_set/cls1_rgb.npy')
+    data = data[:, :, ::-1]
+    #plt.imshow(data)
+    #plt.show()
     cfg_path = "config/ade20k-mobilenetv2dilated-c1_deepsup.yaml"
     #cfg_path="config/ade20k-resnet18dilated-ppm_deepsup.yaml"
     Image = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
     for i in range(10):
-        predictions = predict(model, Image, RESIZE_N, gpu=0, is_silent = False)
-        seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
+        start = time.time()
+        predictions = predict(model, Image, RESIZE_N, gpu = 0, is_silent = True)
+        end = time.time()
+        print('process + prediction: {}s'.format(end - start))
+        start = time.time()
+        seg, pred_color = process_predict(predictions, colors, names, is_silent = True)
+        end = time.time()
+        print('visualize = {} s'.format(end - start))
+    plt.imshow(pred_color)
+    plt.show()
     #np.save('test_result.npy',pred_color) 

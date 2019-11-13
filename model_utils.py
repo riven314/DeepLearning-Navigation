@@ -97,9 +97,12 @@ if __name__ == '__main__':
     for i in range(5):
         start = time.time()
         pred = x.raw_predict(img, is_silent = True)
+        end = time.time()
+        print('process + prediction: {}s'.format(end - start))
+        start = time.time()
         color_pred = x.process_predict(pred, is_silent = True)
         end = time.time()
-        print('runtime = {}s'.format(end - start))
+        print('visualize = {}s'.format(end - start))
     plt.imshow(color_pred)
     plt.show()
     
