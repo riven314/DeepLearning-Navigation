@@ -11,7 +11,7 @@ import csv
 # Our libs
 from dataset import TestDataset
 from models import ModelBuilder, SegmentationModule
-from utils import colorEncode, find_recursive, setup_logger
+from utils import colorEncode_numpy, find_recursive, setup_logger
 from lib.nn import user_scattered_collate, async_copy_to
 from lib.utils import as_numpy
 from PIL import Image
@@ -26,7 +26,7 @@ from img_utils import ImageLoad_cv2, ImageLoad
 assert LooseVersion(torch.__version__) >= LooseVersion('0.4.0'), \
         'PyTorch>=0.4.0 is required'
 
-       
+
 def visualize_result(pred, colors, names, is_silent):
     """
     input: the predictions (np.array), shape is (height, width)
@@ -35,12 +35,13 @@ def visualize_result(pred, colors, names, is_silent):
     """
     # print predictions result in descending order
     pred = np.int32(pred)
-    pixs = pred.size
-    uniques, counts = np.unique(pred, return_counts=True)
     # colorize prediction
-    pred_color = colorEncode(pred, colors).astype(np.uint8)
+    pred_color = colorEncode_numpy(pred, colors)
     if is_silent:
         return pred_color
+    # compute only when verbose = True
+    pixs = pred.size
+    uniques, counts = np.unique(pred, return_counts=True)
     for idx in np.argsort(counts)[::-1]:
         name = names[uniques[idx] + 1]
         ratio = counts[idx] / pixs * 100
@@ -48,8 +49,7 @@ def visualize_result(pred, colors, names, is_silent):
             print("  {}: {:.2f}%".format(name, ratio))
     return pred_color
     
-    
-    
+  
 def predict(model, img_load, resizeNum, is_silent, gpu=0):
     """
     input:
@@ -73,6 +73,7 @@ def predict(model, img_load, resizeNum, is_silent, gpu=0):
             feed_dict = img_load.copy()
             feed_dict['img_data']=img
             del feed_dict['img_ori']
+            #feed_dict = {'img_data': img}
             feed_dict=async_copy_to(feed_dict, gpu)
             
             # forward pass
@@ -95,9 +96,9 @@ def process_predict(scores, colors, names, is_silent):
     _, pred = torch.max(scores, dim=1)
     pred = as_numpy(pred.squeeze(0).cpu()) # shape of pred is (height, width)
     #The predictions for infering distance
-    seg = np.moveaxis(pred, 0, -1)
+    #seg = np.moveaxis(pred, 0, -1)
     pred_color = visualize_result(pred, colors, names, is_silent)
-    return seg, pred_color
+    return pred_color
 
 
 # model part
@@ -144,7 +145,7 @@ def setup_model(cfg_path, root, gpu=0):
 
 # the final function we use 
 def webcam_predict(data, cfg_path, root, colors, names, width, height,resizeNum):
-    Image = ImageLoad(data, width, height, is_silent = False)
+    Image = ImageLoad_cv2(data, width, height, is_silent = False)
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
     predictions = predict(model,Image,resizeNum,gpu=0, is_silent = False)
@@ -181,6 +182,7 @@ if __name__ == '__main__':
     WIDTH = 484
     HEIGHT = 240
     RESIZE_N = 3
+    IS_SILENT = True
     colors = loadmat('data/color150.mat')['colors']
     root = ''
     names = {}
@@ -197,16 +199,19 @@ if __name__ == '__main__':
     #cfg_path="config/ade20k-resnet18dilated-ppm_deepsup.yaml"
     model = setup_model(cfg_path, root, gpu=0)
     model.eval()
-    for i in range(10):
+    for i in range(5):
+        torch.cuda.synchronize()
         start = time.time()
-        img = ImageLoad_cv2(data, WIDTH, HEIGHT, RESIZE_N, is_silent = False)
-        predictions = predict(model, img, RESIZE_N, gpu=0, is_silent = False)
+        img = ImageLoad_cv2(data, WIDTH, HEIGHT, RESIZE_N, is_silent = IS_SILENT)
+        predictions = predict(model, img, RESIZE_N, gpu=0, is_silent = IS_SILENT)
+        torch.cuda.synchronize()
         end = time.time()
-        print('process+predict: {}s'.format(end - start))
+        print('process + predict: {}s'.format(end - start))
+        torch.cuda.synchronize()
         start = time.time()
-        seg,pred_color = process_predict(predictions, colors, names, is_silent = True)
+        pred_color = process_predict(predictions, colors, names, is_silent = IS_SILENT)
+        torch.cuda.synchronize()
         end = time.time()
         print('visualize: {}s'.format(end - start))
     plt.imshow(pred_color)
     plt.show()
-    #np.save('test_result.npy',pred_color) 

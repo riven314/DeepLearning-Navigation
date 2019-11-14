@@ -1,6 +1,10 @@
 """
 do heavy lifting job for setting up mobilenet from mobilenet_segment
 
+PERFORMANCE COMPARISON:
+1. PIL + rescaling 5: ~0.2s per interface frame
+2. CV2 + adaptive rescaling: ~0.15s per interface frame
+
 ISSUE:
 1. same config, same image input, different result to Maggie's result
 """
@@ -29,7 +33,7 @@ class ModelMetaConfig:
         self.CFG_FILE = os.path.join(self.ROOT, 'config', 'ade20k-mobilenetv2dilated-c1_deepsup.yaml')
         # resize before input in model
         self.RESIZE = (484, 240) # (width, height)  
-        self.ENSEMBLE_N = 3
+        self.ENSEMBLE_N = 3 # set 2 to be faster
         # configure names, colors and model
         self._sanity_check()
         self.prepare_colors()
@@ -84,7 +88,7 @@ class ModelMetaConfig:
         """
         process raw model prediction into readable segmentation image
         """
-        _, pred_color = process_predict(pred, self.colors, self.names, is_silent = is_silent)
+        pred_color = process_predict(pred, self.colors, self.names, is_silent = is_silent)
         return pred_color
 
     

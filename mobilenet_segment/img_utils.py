@@ -20,10 +20,12 @@ import torch
 from torchvision import transforms
 import cv2
 
+from profiler import profile
 
 def ImageLoad(data, width, height, ensemble_n, is_silent):
     """
     read the image data and resize it.
+    this is for performance comparison
     
     Input:
     data: the image data which is numpy array with shape: (3, W, H)
@@ -51,8 +53,9 @@ def ImageLoad(data, width, height, ensemble_n, is_silent):
     #  above three value are got from cfg file  
     
     img_resized_list=[]
-    for i in range(ensemble_n):
-        this_short_size = imgSizes[i]
+    for this_short_size in imgSizes:
+    #for i in range(ensemble_n):
+        #this_short_size = imgSizes[i]
         #calculate target height and width
         scale=min(this_short_size / float(min(ori_height, ori_width)),
                   imgMaxSize / float(max(ori_height,ori_width)))
@@ -86,7 +89,7 @@ def ImageLoad(data, width, height, ensemble_n, is_silent):
 
 
 def rescale_img(ori_height, ori_width, normalize, img, target_scale,
-                img_max_size = 1000, p = 8, device = torch.device("cuda", 0)):
+                img_max_size = 1000, p = 8):
     """
     copy a image and resize with target scale 
 
@@ -117,11 +120,6 @@ def rescale_img(ori_height, ori_width, normalize, img, target_scale,
     #image transform, to torch float tensor 3xHxW
     img_resized = np.float32(img_resize) / 255
     img_resized = img_resized.transpose((2,0,1))
-    # send to GPU earlier leads to speed up + more CPU efficient
-    img_resized = normalize(torch.from_numpy(img_resized.copy()).to(device))
-    # it is in CPU mode!
-    #img_resized=normalize(torch.from_numpy(img_resized.copy()))
-    img_resized = torch.unsqueeze(img_resized,0)
     return img_resized
 
 
@@ -135,9 +133,9 @@ def ImageLoad_cv2_parallize(data, width, height, ensemble_n, is_silent):
     img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
     ori_height, ori_width, _ = img.shape
 
-    device = torch.device("cuda", 0)
     p = 8 #padding_constant value
-    imgSizes = [300, 375, 450, 525, 600] 
+    imgSizes = [300, 375, 450, 525, 600]
+    imgSizes = imgSizes[:ensemble_n]
     imgMaxSize = 1000
     #  above three value are got from cfg file  
     
@@ -171,7 +169,6 @@ def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
     img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
     ori_height, ori_width, _ = img.shape
 
-    device = torch.device("cuda", 0)
     p = 8 #padding_constant value
     imgSizes = [300, 375, 450, 525, 600] 
     imgMaxSize = 1000
@@ -201,7 +198,7 @@ def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
         img_resized=np.float32(img_resize)/255
         img_resized=img_resized.transpose((2,0,1))
         # send to GPU earlier leads to speed up + more CPU efficient
-        img_resized=normalize(torch.from_numpy(img_resized.copy()).to(device))
+        img_resized=normalize(torch.from_numpy(img_resized).cuda())
         # it is in CPU mode!
         #img_resized=normalize(torch.from_numpy(img_resized.copy()))
 
@@ -224,12 +221,17 @@ if __name__ == '__main__':
     data = data[:, :, ::-1]
     for i in range(5):
         # time ImageLoad
+        torch.cuda.synchronize()
         start = time.time()
         out = ImageLoad(data, WIDTH, HEIGHT, ENSEMBLE_N, True)
+        torch.cuda.synchronize()
         end = time.time()
         print('ImageLoad runtime: {}s'.format(end - start))
+        
         # time cv2
+        torch.cuda.synchronize()
         start = time.time()
         out_cv2 = ImageLoad_cv2(data, WIDTH, HEIGHT, ENSEMBLE_N, True)
+        torch.cuda.synchronize()
         end = time.time()
         print('ImageLoad_cv2 runtime: {}s'.format(end - start))
