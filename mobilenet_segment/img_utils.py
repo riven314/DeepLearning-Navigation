@@ -1,10 +1,14 @@
 """
 way to optimise:
-1. list copy size = ensemble size
-2. replace PIL by cv2 for resizing
-3. multiprocessing on image processing
-4. multiprocessing on model feed
-5. visualize_result color encoder
+1. list copy size = ensemble size (easy)
+2. replace PIL by cv2 for resizing (easy)
+3. multiprocessing on image processing (require, GPU, CPU shared memory)
+4. multiprocessing on model feed (require, GPU shared memory)
+5. visualize_result color encoder (easy, CPU)
+6. change imgSizes list scale (easy)
+
+REFERENCE:
+1. different way of multiprocessing: https://stackoverflow.com/questions/56094689/overhead-of-python-multiprocessing-initialization-is-worse-than-benefits
 """
 import os
 import sys
@@ -12,7 +16,7 @@ import time
 
 # multiprocessing
 from functools import partial
-from torch.multiprocessing import Pool, Lock
+from multiprocessing import Pool
 
 import numpy as np
 from PIL import Image
@@ -49,6 +53,7 @@ def ImageLoad(data, width, height, ensemble_n, is_silent):
     device = torch.device("cuda", 0)
     p=8 #padding_constant value
     imgSizes = [300,375,450,525,600] 
+    #imgSizes = [100, 175, 240, 525, 600] 
     imgMaxSize = 1000
     #  above three value are got from cfg file  
     
@@ -88,8 +93,7 @@ def ImageLoad(data, width, height, ensemble_n, is_silent):
     return output
 
 
-def rescale_img(ori_height, ori_width, normalize, img, target_scale,
-                img_max_size = 1000, p = 8):
+def rescale_img(args):
     """
     copy a image and resize with target scale 
 
@@ -105,6 +109,13 @@ def rescale_img(ori_height, ori_width, normalize, img, target_scale,
     output:
         img_resized -- torch tensor after resizing
     """
+    ori_height = args[0]
+    ori_width = args[1]
+    normalize = args[2]
+    img = args[3]
+    target_scale = args[4]
+    img_max_size = 1000
+    p = 8
     scale = min(target_scale / float(min(ori_height, ori_width)),
                 img_max_size / float(max(ori_height, ori_width)))
     target_height, target_width = int(ori_height * scale), int(ori_width * scale)
@@ -133,17 +144,14 @@ def ImageLoad_cv2_parallize(data, width, height, ensemble_n, is_silent):
     img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
     ori_height, ori_width, _ = img.shape
 
-    p = 8 #padding_constant value
     imgSizes = [300, 375, 450, 525, 600]
     imgSizes = imgSizes[:ensemble_n]
-    imgMaxSize = 1000
+    args_ls = [[ori_height, ori_width, normalize, img.copy(), scale] for scale in imgSizes]
     #  above three value are got from cfg file  
     
     pool = Pool(processes = ensemble_n)
-    func = partial(rescale_img, ori_height, ori_width, normalize, img)
-    img_resized_list = pool.map(func, imgSizes)
+    img_resized_list = pool.map(rescale_img, args_ls)
     pool.close()
-    pool.join()
     return img_resized_list
 
 
@@ -171,6 +179,7 @@ def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
 
     p = 8 #padding_constant value
     imgSizes = [300, 375, 450, 525, 600] 
+    # imgSizes = [240, 315, 390, 465, 540] (0.087-0.095s per process + predict )
     imgMaxSize = 1000
     #  above three value are got from cfg file  
     
