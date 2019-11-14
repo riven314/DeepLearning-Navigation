@@ -14,6 +14,7 @@ import csv
 from torchvision import transforms
 
 from mobilenet_segment.inference import ImageLoad, setup_model, predict, process_predict
+from img_utils import ImageLoad, ImageLoad_cv2
 from profiler import profile
 #from config.defaults import _C as cfg
 
@@ -73,7 +74,9 @@ class ModelMetaConfig:
             pred -- np array, raw model prediction (with proability and class index)
         """
         width, height = self.RESIZE
-        img = ImageLoad(img, width, height, is_silent = is_silent)
+        ensemble_n = self.ENSEMBLE_N
+        img = ImageLoad_cv2(img, width, height, ensemble_n, is_silent = is_silent)
+        #img = ImageLoad(img, width, height, ensemble_n, is_silent = is_silent)
         pred = predict(self.model, img, self.ENSEMBLE_N, is_silent = is_silent, gpu = 0)
         return pred
 

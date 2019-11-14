@@ -21,77 +21,10 @@ import time
 from profiler import profile
 from torchvision import transforms
 import cv2
+from img_utils import ImageLoad_cv2, ImageLoad
 
 assert LooseVersion(torch.__version__) >= LooseVersion('0.4.0'), \
         'PyTorch>=0.4.0 is required'
-
-def ImageLoad(data, width, height, is_silent):
-    """
-    read the image data and resize it.
-    
-    Input:
-    data: the image data which is numpy array with shape: (3, W, H)
-    
-    output:
-    A dict of image, which has two keys: 'img_ori' and 'img_data'
-    the value of the key 'img_ori' means the original numpy array
-    the value of the key 'img_data' is the list of five resize images 
-    """
-    normalize = transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225]
-            )
-    # transfrom the numpy array to image
-    # PIL.Image.fromarray is slow!
-    img = Image.fromarray(data)
-    #change the image size
-    img=img.resize((width,height), resample = Image.BILINEAR)
-    ori_width, ori_height = img.size
-    #[cv2 approach]
-    #img = data
-    #img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
-    #ori_height, ori_width, _ = img.shape
-
-    device = torch.device("cuda", 0)
-    p=8 #padding_constant value
-    imgSizes=[300,375,450,525,600] 
-    imgMaxSize=1000
-    #  above three value are got from cfg file  
-    
-    img_resized_list=[]
-    for this_short_size in imgSizes:
-        #calculate target height and width
-        scale=min(this_short_size/float(min(ori_height, ori_width)),
-                  imgMaxSize/float(max(ori_height,ori_width)))
-        target_height, target_width=int(ori_height*scale), int(ori_width*scale)
-        
-        #to avoid rounding in network
-        # Round x to the nearest multiple of p and x' >= x
-        target_width=((target_width-1)//p+1)*p
-        target_height=((target_height-1)//p+1)*p
-        
-        #resize images
-        img_resize=img.resize((target_width, target_height), resample = Image.BILINEAR)
-        #[cv2 approach]
-        #img_resize = cv2.resize(img, (target_width, target_height), interpolation = cv2.INTER_LINEAR)
-        
-        #image transform, to torch float tensor 3xHxW
-        img_resized=np.float32(img_resize)/255
-        img_resized=img_resized.transpose((2,0,1))
-        # send to GPU earlier leads to speed up + more CPU efficient
-        img_resized=normalize(torch.from_numpy(img_resized.copy()).to(device))
-        # it is in CPU mode!
-        #img_resized=normalize(torch.from_numpy(img_resized.copy()))
-
-        img_resized=torch.unsqueeze(img_resized,0)
-        img_resized_list.append(img_resized)
-
-    output=dict()
-    output['img_ori']=np.array(img)
-    if not is_silent:
-        print('img size',np.array(img).shape)
-    output['img_data']=[x.contiguous() for x in img_resized_list]
-    return output
 
        
 def visualize_result(pred, colors, names, is_silent):
@@ -117,11 +50,11 @@ def visualize_result(pred, colors, names, is_silent):
     
     
     
-def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
+def predict(model, img_load, resizeNum, is_silent, gpu=0):
     """
     input:
     model: model
-    ImageLoad: A dict of image, which has two keys: 'img_ori' and 'img_data'
+    img_load: A dict of image, which has two keys: 'img_ori' and 'img_data'
     the value of the key 'img_ori' means the original numpy array
     the value of the key 'img_data' is the list of five resize images 
     
@@ -129,15 +62,15 @@ def predict(model, ImageLoad, resizeNum, is_silent, gpu=0):
     the mean predictions of the resize image list: 'img_data' 
     """
     starttime = time.time()
-    segSize = (ImageLoad['img_ori'].shape[0],
-               ImageLoad['img_ori'].shape[1])
+    segSize = (img_load['img_ori'].shape[0],
+               img_load['img_ori'].shape[1])
     #print('segSize',segSize)
-    img_resized_list = ImageLoad['img_data']
+    img_resized_list = img_load['img_data']
     with torch.no_grad():
         scores = torch.zeros(1, cfg.DATASET.num_class, segSize[0], segSize[1], device=torch.device("cuda", gpu))
         
-        for img in img_resized_list[:resizeNum]:
-            feed_dict = ImageLoad.copy()
+        for img in img_resized_list:
+            feed_dict = img_load.copy()
             feed_dict['img_data']=img
             del feed_dict['img_ori']
             feed_dict=async_copy_to(feed_dict, gpu)
@@ -241,6 +174,7 @@ def InferDist(depth, seg, x,y,r):
     distance=np.mean(depth_range[seg_range==cls])
     return distance
 
+
 if __name__ == '__main__':
     #Define the color dict
     import matplotlib.pyplot as plt
@@ -265,7 +199,7 @@ if __name__ == '__main__':
     model.eval()
     for i in range(10):
         start = time.time()
-        img = ImageLoad(data, WIDTH, HEIGHT, is_silent = False)
+        img = ImageLoad_cv2(data, WIDTH, HEIGHT, RESIZE_N, is_silent = False)
         predictions = predict(model, img, RESIZE_N, gpu=0, is_silent = False)
         end = time.time()
         print('process+predict: {}s'.format(end - start))
