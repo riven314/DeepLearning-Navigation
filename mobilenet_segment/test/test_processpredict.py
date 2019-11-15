@@ -1,7 +1,14 @@
 """
-two bottlenecks:
+agenda:
+1. speedup visualize_result
+2. grouping labels
+
+speed bottlenecks:
 1. colorEncoding
-2. torch.tensor.cpu()
+
+results:
+1. with visualize_result optimize: 0.045s --> 0.002s
+2. with grouping labels: 0.002s --> 0.002-0.003s
 """
 import os
 import sys
@@ -21,6 +28,7 @@ from inference import predict, setup_model
 from lib.utils import as_numpy
 
 from profiler import profile
+from idx_utils import create_idx_group, edit_colors_names_group
 
 def preprocess():
     WIDTH = 484
@@ -35,7 +43,9 @@ def preprocess():
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            names[int(row[0])] = row[5].split(";")[0]        
+            names[int(row[0])] = row[5].split(";")[0]
+    idx_map = create_idx_group()
+    colors, names = edit_colors_names_group(colors, names)
 
     # SETUP MODEL
     cfg_path = os.path.join('..', 'config', 'ade20k-mobilenetv2dilated-c1_deepsup.yaml')
@@ -50,10 +60,10 @@ def preprocess():
 
     # MODEL FEED
     predictions = predict(model, img, ENSEMBLE_N, gpu = 0, is_silent = False)
-    return predictions, colors, names
+    return predictions, colors, names, idx_map
 
 
-def process_predict_bad(scores, colors, names, is_silent):
+def process_predict_bad(scores, colors, names, idx_map, is_silent):
     """
     colorEncode is used
 
@@ -67,7 +77,8 @@ def process_predict_bad(scores, colors, names, is_silent):
     pred = as_numpy(pred.squeeze(0).cpu()) # shape of pred is (height, width)
     #The predictions for infering distance
     #seg = np.moveaxis(pred, 0, -1)
-    pred = np.int32(pred)
+    pred = idx_map[pred]
+    red = np.int32(pred)
     pred_color = colorEncode(pred, colors).astype(np.uint8)
     if is_silent:
         return pred_color
@@ -82,7 +93,7 @@ def process_predict_bad(scores, colors, names, is_silent):
     return pred_color
 
 
-def process_predict_good(scores, colors, names, is_silent):
+def process_predict_good(scores, colors, names, idx_map, is_silent):
     """
     replace colorEncode by numpy way
 
@@ -95,6 +106,7 @@ def process_predict_good(scores, colors, names, is_silent):
     _, pred = torch.max(scores, dim=1)
     pred = as_numpy(pred.squeeze(0).cpu()) # shape of pred is (height, width)
     #The predictions for infering distance
+    pred = idx_map[pred]
     pred = np.int32(pred)
     pred_color = rock_the_colorencoding(pred, colors)
     if is_silent:
@@ -116,13 +128,14 @@ def rock_the_colorencoding(labelmap, colors):
 
 if __name__ == '__main__':
     # COLOR ENCODING
-    predictions, colors, names = preprocess()
+    import matplotlib.pyplot as plt
+    predictions, colors, names, idx_map = preprocess()
     print('Comparing Two Ways of Color Encoding...')
     for i in range(5):
         # bad: use colorEncode
         torch.cuda.synchronize()
         start = time.time()
-        pred_color_orig = process_predict_bad(predictions, colors, names, is_silent = True)
+        pred_color_orig = process_predict_bad(predictions, colors, names, idx_map, is_silent = True)
         torch.cuda.synchronize()
         end = time.time()
         print('Original Runtime: {}s'.format(end - start))
@@ -130,9 +143,10 @@ if __name__ == '__main__':
         # good: replace by numpy lookup
         torch.cuda.synchronize()
         start = time.time()
-        pred_color_gd = process_predict_good(predictions, colors, names, is_silent = True)
+        pred_color_gd = process_predict_good(predictions, colors, names, idx_map, is_silent = True)
         torch.cuda.synchronize()
         end = time.time()
         print('Improved Runtime: {}s'.format(end - start))
-
     assert (pred_color_gd == pred_color_orig).all(), 'SOMETHING WRONG WITH NEW COLOR ENCODING'
+    plt.imshow(pred_color_gd)
+    plt.show()

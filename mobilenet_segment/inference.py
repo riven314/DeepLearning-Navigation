@@ -21,7 +21,8 @@ import time
 from profiler import profile
 from torchvision import transforms
 import cv2
-from img_utils import ImageLoad_cv2, ImageLoad
+from img_utils import ImageLoad_cv2
+from idx_utils import create_idx_group, edit_colors_names_group
 
 assert LooseVersion(torch.__version__) >= LooseVersion('0.4.0'), \
         'PyTorch>=0.4.0 is required'
@@ -39,14 +40,14 @@ def visualize_result(pred, colors, names, is_silent):
     pred_color = colorEncode_numpy(pred, colors)
     if is_silent:
         return pred_color
-    # compute only when verbose = True
+    # compute only when verbose = True (it costs 2 ms)
     pixs = pred.size
     uniques, counts = np.unique(pred, return_counts=True)
     for idx in np.argsort(counts)[::-1]:
         name = names[uniques[idx] + 1]
         ratio = counts[idx] / pixs * 100
         if ratio > 0.1:
-            print("  {}: {:.2f}%".format(name, ratio))
+            print("  {}: {:.2f}% (idx: {})".format(name, ratio, uniques[idx]))
     return pred_color
     
   
@@ -85,7 +86,7 @@ def predict(model, img_load, resizeNum, is_silent, gpu=0):
     return scores
 
 
-def process_predict(scores, colors, names, is_silent):
+def process_predict(scores, colors, names, idx_map, is_silent):
     """
     input:
     the predictions of model
@@ -95,8 +96,8 @@ def process_predict(scores, colors, names, is_silent):
     """
     _, pred = torch.max(scores, dim=1)
     pred = as_numpy(pred.squeeze(0).cpu()) # shape of pred is (height, width)
-    #The predictions for infering distance
-    #seg = np.moveaxis(pred, 0, -1)
+    # grouping label index
+    pred = idx_map[pred]
     pred_color = visualize_result(pred, colors, names, is_silent)
     return pred_color
 
@@ -143,15 +144,6 @@ def setup_model(cfg_path, root, gpu=0):
     
     return segmentation_module
 
-# the final function we use 
-def webcam_predict(data, cfg_path, root, colors, names, width, height,resizeNum):
-    Image = ImageLoad_cv2(data, width, height, is_silent = False)
-    model = setup_model(cfg_path, root, gpu=0)
-    model.eval()
-    predictions = predict(model,Image,resizeNum,gpu=0, is_silent = False)
-    seg,pred_color = process_predict(predictions, colors, names, is_silent = False)
-    return seg,pred_color
-
 
 def InferDist(depth, seg, x,y,r):
     """
@@ -181,7 +173,7 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     WIDTH = 484
     HEIGHT = 240
-    RESIZE_N = 3
+    RESIZE_N = 2
     IS_SILENT = True
     colors = loadmat('data/color150.mat')['colors']
     root = ''
@@ -190,7 +182,9 @@ if __name__ == '__main__':
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            names[int(row[0])] = row[5].split(";")[0]        
+            names[int(row[0])] = row[5].split(";")[0]
+    idx_map = create_idx_group()
+    colors, names = edit_colors_names_group(colors, names)       
         
     #take cls.npy as an example
     data = np.load(os.path.join('test_set', 'cls1_rgb.npy'))
@@ -209,7 +203,7 @@ if __name__ == '__main__':
         print('process + predict: {}s'.format(end - start))
         torch.cuda.synchronize()
         start = time.time()
-        pred_color = process_predict(predictions, colors, names, is_silent = IS_SILENT)
+        pred_color = process_predict(predictions, colors, names, idx_map, is_silent = IS_SILENT)
         torch.cuda.synchronize()
         end = time.time()
         print('visualize: {}s'.format(end - start))

@@ -16,9 +16,11 @@ import numpy as np
 from scipy.io import loadmat
 import csv
 from torchvision import transforms
+import torch
 
-from mobilenet_segment.inference import ImageLoad, setup_model, predict, process_predict
-from img_utils import ImageLoad, ImageLoad_cv2
+from mobilenet_segment.inference import setup_model, predict, process_predict
+from img_utils import ImageLoad_cv2
+from idx_utils import create_idx_group, edit_colors_names_group
 from profiler import profile
 #from config.defaults import _C as cfg
 
@@ -38,6 +40,9 @@ class ModelMetaConfig:
         self._sanity_check()
         self.prepare_colors()
         self.prepare_names()
+        # for label grouping
+        self.adjust_colors_names()
+        self.prepare_idx_map()
         self.prepare_model()
         print('model configuration completed!')
 
@@ -56,6 +61,12 @@ class ModelMetaConfig:
             next(reader)
             for row in reader:
                 self.names[int(row[0])] = row[5].split(';')[0]
+    
+    def prepare_idx_map(self):
+        self.idx_map = create_idx_group()
+    
+    def adjust_colors_names(self):
+        self.colors, self.names = edit_colors_names_group(self.colors, self.names)
 
     def prepare_model(self):
         # set GPU mode by default
@@ -88,7 +99,7 @@ class ModelMetaConfig:
         """
         process raw model prediction into readable segmentation image
         """
-        pred_color = process_predict(pred, self.colors, self.names, is_silent = is_silent)
+        pred_color = process_predict(pred, self.colors, self.names, self.idx_map, is_silent = is_silent)
         return pred_color
 
     
@@ -98,12 +109,23 @@ if __name__ == '__main__':
     img = np.load(DATA_PATH)
     img = img[:,:,::-1]
     print('image shape = {}'.format(img.shape))
-    plt.imshow(img)
-    plt.show()
+    #plt.imshow(img)
+    #plt.show()
     x = ModelMetaConfig()
     for i in range(5):
+        # time img process + predict
+        torch.cuda.synchronize()
+        start = time.time()
         pred = x.raw_predict(img, is_silent = True)
-        color_pred = x.process_predict(pred, is_silent = False)
-    plt.imshow(color_pred)
-    plt.show()
-    
+        torch.cuda.synchronize()
+        end = time.time()
+        print('process+predict: {}s'.format(end - start))
+
+        torch.cuda.synchronize()
+        start = time.time()
+        color_pred = x.process_predict(pred, is_silent = True)
+        torch.cuda.synchronize()
+        end = time.time()
+        print('visualize: {}s'.format(end - start))
+    #plt.imshow(color_pred)
+    #plt.show()
