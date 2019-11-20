@@ -98,7 +98,7 @@ def group_colors_names(colors, names):
 
 
 if __name__ == '__main__':
-    colors, names = fetch_raw_colors_names()
+    old_colors, old_names = fetch_raw_colors_names()
     idx_map = create_idx_group()
-    #colors, names = edit_colors_names_group(colors, names)
+    new_colors, new_names = edit_colors_names_group(old_colors.copy(), old_names.copy())
 

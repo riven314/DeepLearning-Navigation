@@ -12,6 +12,7 @@ import logging
 
 import numpy as np
 import cv2
+import torch
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 import pyrealsense2 as rs
 
@@ -65,24 +66,70 @@ class FrameThread(QThread):
         self.frame_store = FrameStore()
     
     def run(self):
-        #ptvsd.debug_this_thread()
+        """
+        RUNTIME BREAKDOWN:
+            [realsense]
+                wait frame: ~0-1 ms
+                get rgbd frame: ~0-1 ms
+                align: ~25 ms
+                frame to np: 0 ms
+                colorize depth: 16 ms
+            [model]
+                process + predict + visualize: 120-130 ms
+            [tidy up]
+                total: 1 ms
+            [unexplain after loop]
+                total: 5 ms
+
+        REFERENCE:
+        1. [align] low FPS when align is used (align is CPU intensive): https://github.com/IntelRealSense/librealsense/issues/5218
+        2. [align] how to enable cuda in realsense: https://github.com/IntelRealSense/librealsense/issues/4905#issuecomment-533854888
+        3. [align] align runtime on CUDA v.s. CPU: https://github.com/IntelRealSense/librealsense/pull/2670
+        4. [align] another discussion on low FPS for align: https://github.com/IntelRealSense/librealsense/issues/2321
+        5. [pyqt] proper way to construct QThread: https://forum.qt.io/topic/85826/picamera-significant-delay-and-low-fps-but-low-cpu-and-memory-usage/2
+        """
+        end_loop = time.time()
         while True:
-            print('time 1 = {}'.format(time.time()))
+            torch.cuda.synchronize()
+            t = time.time()
+            print('time: {:10.4f} s'.format(t))
+            print('unexplained: {:10.4f} s'.format(t - end_loop))
+            start = time.time()
             frames = self.rs_camera.pipeline.wait_for_frames()
+            end = time.time()
+            print('realsense wait: {:10.4f} s'.format(end - start))
+            start = time.time()
             frames = self.align.process(frames)
+            end = time.time()
+            print('realsense align: {:10.4f} s'.format(end - start))
+            start = time.time()
             rgb_frame = frames.get_color_frame() # uint 8
             depth_frame = frames.get_depth_frame() # unit 8
+            end = time.time()
+            print('realsense get frame: {:10.4f} s'.format(end - start))
+            start = time.time()
             color_image = np.asanyarray(rgb_frame.get_data())
             depth_image = np.asanyarray(depth_frame.get_data())
+            end = time.time()
+            print('realsense frame np: {:10.4f} s'.format(end - start))
+            start = time.time()
             depth_colormap = np.asanyarray(self.colorizer.colorize(depth_frame).get_data())
-            #print('time 2 = {}'.format(time.time()))
+            end = time.time()
+            print('realsense colorize: {:10.4f} s'.format(end - start))
+            torch.cuda.synchronize()
+            start = time.time()
             seg_out = self.model_config.raw_predict(color_image, is_silent = self.IS_SILENT)
             seg_out = self.model_config.process_predict(seg_out, is_silent = self.IS_SILENT)
-            #print('time 3 = {}'.format(time.time()))
-            display_image = np.concatenate((color_image, depth_colormap), axis=1)
+            torch.cuda.synchronize()
+            end = time.time()
+            print('process+predict: {:10.4f} s'.format(end - start))
+            start = time.time()
             # store key data at a snapshot
             self.frame_store.rgb_img = color_image
             self.frame_store.depth_1c_img = depth_image
             self.frame_store.depth_3c_img = depth_colormap
             self.frame_store.seg_out = seg_out
             self.frame_signal.emit(self.frame_store)
+            end_loop = time.time()
+            print('end+emit: {:10.4f} s'.format(end_loop - start))
+            

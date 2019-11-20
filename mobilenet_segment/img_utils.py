@@ -179,14 +179,24 @@ def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
 
     p = 8 #padding_constant value
     imgSizes = [300, 375, 450, 525, 600] 
-    # imgSizes = [240, 315, 390, 465, 540] (0.087-0.095s per process + predict )
+    #imgSizes = [375, 450, 525, 465, 540] #(0.087-0.095s per process + predict )
     imgMaxSize = 1000
     #  above three value are got from cfg file  
     
     img_resized_list = []
-
-    #pool = Pool(processes = ensemble_n)
-    #func = partial(rescale_img(s, ), ori_height, ori_width, normalize, img)
+    if ensemble_n == 1:
+        print('one img')
+        img_resized = np.float32(img)/255
+        img_resized = img_resized.transpose((2,0,1))
+        img_resized=normalize(torch.from_numpy(img_resized).cuda())
+        img_resized=torch.unsqueeze(img_resized,0)
+        img_resized_list.append(img_resized)
+        output=dict()
+        output['img_ori'] = np.array(img)
+        if not is_silent:
+            print('img size', np.array(img).shape)
+        output['img_data'] = [x.contiguous() for x in img_resized_list]
+        return output
 
     for i in range(ensemble_n):
         this_short_size = imgSizes[i]
