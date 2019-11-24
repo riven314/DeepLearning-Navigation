@@ -99,7 +99,7 @@ def process_predict(scores, colors, names, idx_map, is_silent):
     # grouping label index
     pred = idx_map[pred]
     pred_color = visualize_result(pred, colors, names, is_silent)
-    return pred_color
+    return pred, pred_color
 
 
 # model part

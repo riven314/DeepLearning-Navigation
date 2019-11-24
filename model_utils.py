@@ -17,6 +17,7 @@ from scipy.io import loadmat
 import csv
 from torchvision import transforms
 import torch
+import cv2
 
 from mobilenet_segment.inference import setup_model, predict, process_predict
 from img_utils import ImageLoad_cv2
@@ -99,18 +100,21 @@ class ModelMetaConfig:
         """
         process raw model prediction into readable segmentation image
         """
-        pred_color = process_predict(pred, self.colors, self.names, self.idx_map, is_silent = is_silent)
-        return pred_color
+        pred_idx, pred_color = process_predict(pred, self.colors, self.names, self.idx_map, is_silent = is_silent)
+        return pred_idx, pred_color
 
     
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
-    DATA_PATH = os.path.join(os.getcwd(), 'mobilenet_segment', 'test_set', 'cls1_rgb.npy')
-    img = np.load(DATA_PATH)
+    DATA_PATH = os.path.join(os.getcwd(), 'd435_camera', 'test_cases', 'lab_corridor', 'test_lab_corridor37_rgb.jpg')
+    WRITE_IDX_PATH = os.path.join(os.getcwd(), 'test_cases', 'test4_pred_idx.png')
+    WRITE_COLOR_PATH = os.path.join(os.getcwd(), 'test_cases', 'test4_pred_rgb.jpg')
+    img = cv2.imread(DATA_PATH)
+    #img = np.load(DATA_PATH)
     img = img[:,:,::-1]
     print('image shape = {}'.format(img.shape))
-    #plt.imshow(img)
-    #plt.show()
+    plt.imshow(img)
+    plt.show()
     x = ModelMetaConfig()
     for i in range(5):
         # time img process + predict
@@ -123,9 +127,11 @@ if __name__ == '__main__':
 
         torch.cuda.synchronize()
         start = time.time()
-        color_pred = x.process_predict(pred, is_silent = True)
+        idx_pred, color_pred = x.process_predict(pred, is_silent = True)
         torch.cuda.synchronize()
         end = time.time()
         print('visualize: {}s'.format(end - start))
-    #plt.imshow(color_pred)
-    #plt.show()
+    plt.imshow(color_pred)
+    plt.show()
+    cv2.imwrite(WRITE_IDX_PATH, idx_pred)
+    cv2.imwrite(WRITE_COLOR_PATH, color_pred)
