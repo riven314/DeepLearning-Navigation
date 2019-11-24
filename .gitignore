@@ -1,9 +1,12 @@
 /__pycache__
 /.vscode
-/d435_module/*.py
-/d435_module/__pycache__/*
+/d435_camera/*.py
+/d435_camera/__pycache__/*
+/d435_camera/test_cases/*
+/d435_camera/test_cases/lab_corridor/*
 /examples/__pycache__
 /test/__pycache__
+/test_cases/*
 /mobilenet_segment/__pycache__/*
 /mobilenet_segment/ckpt/*
 /mobilenet_segment/data/*
