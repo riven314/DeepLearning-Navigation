@@ -134,4 +134,6 @@ if __name__ == '__main__':
     plt.imshow(color_pred)
     plt.show()
     cv2.imwrite(WRITE_IDX_PATH, idx_pred)
+    # RGB to BGR
+    color_pred = color_pred[:, : , ::-1]
     cv2.imwrite(WRITE_COLOR_PATH, color_pred)

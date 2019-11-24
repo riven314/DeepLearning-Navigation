@@ -203,7 +203,7 @@ if __name__ == '__main__':
         print('process + predict: {}s'.format(end - start))
         torch.cuda.synchronize()
         start = time.time()
-        pred_color = process_predict(predictions, colors, names, idx_map, is_silent = IS_SILENT)
+        pred_idx, pred_color = process_predict(predictions, colors, names, idx_map, is_silent = IS_SILENT)
         torch.cuda.synchronize()
         end = time.time()
         print('visualize: {}s'.format(end - start))

@@ -14,6 +14,7 @@ REFERENCE
 """
 import os
 import sys
+import time
 from collections import defaultdict
 
 import csv
@@ -28,14 +29,19 @@ PRED_IDX_F = 'test{}_pred_idx.png'
 PRED_RGB_F = 'test{}_pred_rgb.jpg'
 test_dict = {i: [os.path.join(ROOT, PRED_IDX_F.format(i)), os.path.join(ROOT, PRED_RGB_F.format(i))] for i in range(1, 5)}
 
+
 # get names
-names = {}
-NAMES_PATH = os.path.join(os.getcwd(), '..', 'mobilenet_segment', 'data', 'object150_info.csv')
-with open(NAMES_PATH) as f:
-    reader = csv.reader(f)
-    next(reader)
-    for row in reader:
-        names[int(row[0])] = row[5].split(';')[0]
+def get_names():
+    names = {}
+    names[1] = 'wall'
+    names[2] = 'floor'
+    names[3] = 'plant'
+    names[4] = 'ceiling'
+    names[5] = 'furniture'
+    names[6] = 'person'
+    names[7] = 'door'
+    names[8] = 'objects'
+    return names
 
 
 def get_small_portion(h, w, grid = (2, 3)):
@@ -66,7 +72,7 @@ def create_grid(h, w, grid = (2, 3)):
     grid_r, grid_c = grid
     grid_h = int(h / grid_r)
     grid_w = int(w / grid_c)
-    mapping = {1: 0, 2: 1000, 3: 2000, 11: 3000, 12: 4000, 13: 5000}
+    mapping = {1: 0, 2: 10, 3: 20, 11: 30, 12: 40, 13: 50}
     for i in range(grid_r):
         for j in range(grid_c):
             idx = 10*i + j + 1
@@ -101,14 +107,15 @@ def scene_summarize(pred_idx, mat, names, threshold = 900):
     new_pred_idx = pred_idx + mat
     idxs, counts = np.unique(new_pred_idx, return_counts = True)
     # kick out idxs with small counts
-    new_idxs = filter_idxs(idxs, counts)
-    # map each idx to names
+    new_idxs = filter_idxs(idxs, counts, threshold = threshold)
+    grid_dict = grid_name_mapping(new_idxs, names)
+    return grid_dict
 
 
-
-
-def grid_summary(new_idxs, names):
+def grid_name_mapping(new_idxs, names):
     """
+    create a dict with key = grid index, value = list of objects in the grid
+
     input:
         new_idxs -- list of new indexes (with grid adding) after count filtering
         names -- dict of names mapping from index
@@ -117,8 +124,8 @@ def grid_summary(new_idxs, names):
     """
     grid_dict = defaultdict(list)
     for idx in new_idxs:
-        obj = names[idx%1000]
-        grid_dict[idx//1000].append(obj)
+        obj = names[idx%10 + 1]
+        grid_dict[idx//10].append(obj)
     return grid_dict
 
 
@@ -143,13 +150,15 @@ def test_create_grid():
 if __name__ == '__main__':
     h = 240
     w = 484
+    names = get_names()
     t = get_small_portion(h, w)
-    idx_f = test_dict[1][0]
+    idx_f = test_dict[2][0]
     pred_idx = cv2.imread(idx_f, cv2.IMREAD_GRAYSCALE)
     # run this script in "test" dir
-    mat = test_create_grid()
-    new_pred_idx = mat + pred_idx
-    idxs, counts = np.unique(new_pred_idx, return_counts = True)
-    new_idxs = filter_idxs(idxs, counts, threshold = 900)
-    grid_dict = grid_summary(new_idxs, names)
-    
+    mat = create_grid(h, w)
+    for i in range(5):
+        start = time.time()
+        grid_summary = scene_summarize(pred_idx, mat, names, threshold = 900)
+        end = time.time()
+        print('runtime: {} s'.format(end - start))
+    print(grid_summary)
