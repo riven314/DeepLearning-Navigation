@@ -146,20 +146,22 @@ class RGBDhandler:
 
 
 if __name__ == '__main__':
-    name = 'cls20'
+    import cv2
+    name = 'corridor156'
     resolution = (1280, 720)
+    RGB_PATH = os.path.join(os.getcwd(), 'test_cases', 'lab_corridor_2', 'test_lab_' + name + '_rgb.jpg')
+    D1_PATH = os.path.join(os.getcwd(), 'test_cases', 'lab_corridor_2', 'test_lab_' + name + '_d1c.png')
+    D3_PATH = os.path.join(os.getcwd(), 'test_cases', 'lab_corridor_2', 'test_lab_' + name + '_d3c.jpg')
     rs_handler = RGBDhandler(resolution, 'bgr8', resolution, 'z16', 30)
-    rs_handler.test_streamline(frame_limit = 20)
-    # color_image, depth_image, depth_colormap = rs_handler.test_streamline(
-    #                                             frame_limit = 50, 
-    #                                             is_process_depth = False)
-    # color_path = os.path.join('test', 'npy_test_case', name + '_rgb.npy')
-    # depth_1c_path = os.path.join('test', 'npy_test_case', name + '_d1c.npy')
-    # depth_3c_path = os.path.join('test', 'npy_test_case', name + '_d3c.npy')
-    # np.save(color_path, color_image)
-    # np.save(depth_1c_path, depth_image)
-    # np.save(depth_3c_path, depth_colormap)
-    # print('RGB SAVE: {}, {}'.format(color_image.shape, color_path))
-    # print('DEPTH 1C SAVE: {}, {}'.format(depth_image.shape, depth_1c_path))
-    # print('DEPTH 3C SAVE: {}, {}'.format(depth_colormap.shape, depth_3c_path))
-    # #color_image, depth_image = rs_handler.get_snapshot_np(name = 'cls1')
+    color_image, depth_image, depth_colormap = rs_handler.test_streamline(
+                                                frame_limit = 40, 
+                                                is_process_depth = False)
+    #color_image = color_image[:,:,::-1]
+    #depth_colormap = depth_colormap[:,:,::-1]
+    cv2.imwrite(RGB_PATH, color_image)
+    cv2.imwrite(D1_PATH, depth_image)
+    cv2.imwrite(D3_PATH, depth_colormap)
+    print('RGB SAVE: {}, {}'.format(color_image.shape, RGB_PATH))
+    print('DEPTH 1C SAVE: {}, {}'.format(depth_image.shape, D1_PATH))
+    print('DEPTH 3C SAVE: {}, {}'.format(depth_colormap.shape, D3_PATH))
+    #color_image, depth_image = rs_handler.get_snapshot_np(name = 'cls1')
