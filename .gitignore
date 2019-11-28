@@ -7,7 +7,6 @@
 /examples/__pycache__
 /test/__pycache__
 /test_cases/*
-/test/simplify/__pycache__/*
 /mobilenet_segment/__pycache__/*
 /mobilenet_segment/ckpt/*
 /mobilenet_segment/data/*
