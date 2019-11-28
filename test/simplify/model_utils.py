@@ -11,6 +11,10 @@ ISSUE:
 import os
 import sys
 import time
+ROOT_PATH = os.path.join(os.getcwd(), '..', '..')
+MOBILENET_PATH = os.path.join(ROOT_PATH, 'mobilenet_segment')
+sys.path.append(ROOT_PATH)
+sys.path.append(MOBILENET_PATH)
 
 import numpy as np
 from scipy.io import loadmat
@@ -30,7 +34,7 @@ class ModelMetaConfig:
         """
         ROOT is the main dir for 'data' and 'config' folder
         """
-        self.RESIZE = (484, 240) # (427, 240)
+        self.RESIZE = (427, 240) # (427, 240)
         self.ENSEMBLE_N = 3
         self.setup_path(root)
         self.prepare_model()
@@ -98,23 +102,23 @@ class ModelMetaConfig:
         """
         process raw model prediction into readable segmentation image
         """
-        pred_color = process_predict(pred, self.colors, self.names, self.idx_map, is_silent = is_silent)
+        pred_idx, pred_color = process_predict(pred, self.colors, self.names, self.idx_map, is_silent = is_silent)
         return pred_color
 
     
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     k = 'corridor8'
-    #DATA_PATH = os.path.join(os.getcwd(), 'test_cases', 'test_corridor3_rgb.jpg')
-    DATA_PATH = os.path.join(os.getcwd(), 'test_cases', 'test.jpg')
+    DATA_PATH = os.path.join(os.getcwd(), '..', '..', 'test_cases', 'test3_rgb.jpg')
     img = cv2.imread(DATA_PATH)
     #img = np.load(DATA_PATH)
     img = img[:,:,::-1]
     print('image shape = {}'.format(img.shape))
     #plt.imshow(img)
     #plt.show()
-    x = ModelMetaConfig()
-    for i in range(40):
+    x = ModelMetaConfig(root = MOBILENET_PATH)
+    x.ENSEMBLE_N = 1
+    for i in range(10):
         # time img process + predict
         torch.cuda.synchronize()
         start = time.time()

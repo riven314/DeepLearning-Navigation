@@ -185,7 +185,6 @@ def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
     
     img_resized_list = []
     if ensemble_n == 1:
-        print('one img')
         img_resized = np.float32(img)/255
         img_resized = img_resized.transpose((2,0,1))
         img_resized=normalize(torch.from_numpy(img_resized).cuda())
