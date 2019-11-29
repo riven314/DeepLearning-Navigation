@@ -72,7 +72,7 @@ class Layout(QWidget):
         # input time in this cell
         camera_time = QLabel('999 ms')
         model_time = QLabel('999 ms')
-        fps_time = QLabel('999 ms')
+        fps_time = QLabel('100')
         camera_time.setFixedWidth(150)
         model_time.setFixedWidth(150)
         fps_time.setFixedWidth(150)
@@ -157,7 +157,7 @@ class Layout(QWidget):
 
     def fill_third_right_layer(self):
         layout = QGridLayout()
-        self.obj_name = QLabel('person')
+        self.obj_name = QLabel('other')
         self.obj_dist = QLabel('1.5 m')
         layout.addWidget(QLabel('    CLASS:'), 0, 0, 1, 1)
         layout.addWidget(self.obj_name, 0, 1, 1, 3)
