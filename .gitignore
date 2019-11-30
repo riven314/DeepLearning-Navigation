@@ -1,5 +1,6 @@
 /__pycache__
 /.vscode
+/unit_test/__pycache__/*
 /d435_camera/*.py
 /d435_camera/__pycache__/*
 /d435_camera/test_cases/*
