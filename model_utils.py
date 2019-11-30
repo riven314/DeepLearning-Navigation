@@ -35,7 +35,7 @@ class ModelMetaConfig:
         self.COLOR2OBJ_FILE = os.path.join(self.ROOT, 'data', 'object150_info.csv')
         self.CFG_FILE = os.path.join(self.ROOT, 'config', 'ade20k-mobilenetv2dilated-c1_deepsup.yaml')
         # resize before input in model
-        self.RESIZE = (484, 240) # (width, height)  
+        self.RESIZE = (427, 240) # (width, height)  
         self.ENSEMBLE_N = 3 # set 2 to be faster
         # configure names, colors and model
         self._sanity_check()

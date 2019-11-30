@@ -134,27 +134,6 @@ def rescale_img(args):
     return img_resized
 
 
-def ImageLoad_cv2_parallize(data, width, height, ensemble_n, is_silent):
-    normalize = transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-        )
-    #[cv2 approach]
-    img = data
-    img = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)
-    ori_height, ori_width, _ = img.shape
-
-    imgSizes = [300, 375, 450, 525, 600]
-    imgSizes = imgSizes[:ensemble_n]
-    args_ls = [[ori_height, ori_width, normalize, img.copy(), scale] for scale in imgSizes]
-    #  above three value are got from cfg file  
-    
-    pool = Pool(processes = ensemble_n)
-    img_resized_list = pool.map(rescale_img, args_ls)
-    pool.close()
-    return img_resized_list
-
-
 def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
     """
     read the image data and resize it.
