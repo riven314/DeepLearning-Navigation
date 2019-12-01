@@ -17,6 +17,7 @@ from layout import Layout
 from pyqt_utils import convert_qimg
 from scene_summary import get_names, create_grid, scene_summarize
 from simplify_thread_utils import FrameStore, FrameThread
+from obj_avoidance import run_avoidance
 
 class SimplifyInteface(Layout):
     def __init__(self):
@@ -32,6 +33,7 @@ class SimplifyInteface(Layout):
         self.seg_colors = self.f_thread.model_config.colors
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_first_layer(frame_store))
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_second_layer(frame_store))
+        self.f_thread.frame_signal.connect(lambda frame_store: self.update_thired_layer(frame_store))
         self.f_thread.start()
     
     def update_first_layer(self, frame_store):
@@ -59,6 +61,20 @@ class SimplifyInteface(Layout):
             txt = ', '.join(obj_ls)
             q_label = getattr(self, 'grid_{}'.format(i + 1))
             q_label.setText(txt)
+
+    def update_thired_layer(self, frame_store):
+        obj_tup, obj_img = run_avoidance(frame_store.d1_img, frame_store.pred_idx)
+        qimg = convert_qimg(obj_img, win_width = 620, win_height = 360, is_gray = True)
+        # update frame on left
+        self.obj_frame.setPixmap(QPixmap.fromImage(qimg))
+        # update summary on right
+        if obj_tup[1] is None:
+            self.obj_name.setText('NA')
+            self.obj_dist.setText('NA')
+        else:
+            obj_name = self.names[obj_tup[1] + 1]
+            self.obj_name.setText(obj_name)
+            self.obj_dist.setText('{} m'.format(obj_tup[2]))
 
 
 if __name__ == '__main__':

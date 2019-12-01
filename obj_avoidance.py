@@ -102,7 +102,9 @@ def get_obj_img(d1_img, inst_idx, target_idx):
     output:
         obj_img -- np array, showing closest object only (having same dim as input)
     """
-    # sharpen the intensity by * 30
-    obj_img = (inst_idx == target_idx) * d1_img * 30
-    return obj_img
+    if target_idx is None:
+        return np.zeros(shape = d1_img.shape, dtype = np.uint8)
+    else:
+        # sharpen the intensity by * 30
+        return (inst_idx == target_idx) * d1_img * 30
 

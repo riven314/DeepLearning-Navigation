@@ -21,8 +21,8 @@ from model_utils import ModelMetaConfig
 
 class FrameStore:
     def __init__(self):
-        self.rgb_img_1 = None
-        self.rgb_img_2 = None
+        self.rgb_img = None
+        self.d1_img = None
         self.pred_rgb = None
         self.pred_idx = None
         # time each component
@@ -41,16 +41,15 @@ class FrameThread(QThread):
         self.model_config = ModelMetaConfig(root = MOBILENET_PATH)
         self.model_config.ENSEMBLE_N = 1
         self.frame_store = FrameStore()
-        self.switch = True
     
     def load_img(self):
-        self.PATH_1 = os.path.join(os.getcwd(), '..', 'test_cases', 'test2_rgb.jpg')
-        self.PATH_2 = os.path.join(os.getcwd(), '..', 'test_cases', 'test3_rgb.jpg')
-        rgb_img_1 = cv2.imread(self.PATH_1)
-        rgb_img_2 = cv2.imread(self.PATH_2)
+        IMG_PATH = os.path.join(os.getcwd(), '..', 'test_cases', 'test_obj_avoid_rgb.jpg')
+        D1_PATH = os.path.join(os.getcwd(), '..', 'test_cases', 'test_obj_avoid_d1.png')
+        rgb_img = cv2.imread(IMG_PATH)
+        d1_img = cv2.imread(D1_PATH, cv2.IMREAD_GRAYSCALE)
         # slow without img.copy()
-        self.rgb_img_1 = rgb_img_1[:, :, ::-1].copy()
-        self.rgb_img_2 = rgb_img_2[:, :, ::-1].copy()
+        self.rgb_img = rgb_img[:, :, ::-1].copy()
+        self.d1_img = d1_img
 
     def run(self):
         """
@@ -66,12 +65,7 @@ class FrameThread(QThread):
             crt_t = time.time()
             torch.cuda.synchronize()
             model_start = time.time()
-            if self.switch:
-                rgb_img = self.rgb_img_1
-                self.switch = False
-            else:
-                rgb_img = self.rgb_img_2
-                self.switch = True
+            rgb_img = self.rgb_img
             seg_out = self.model_config.raw_predict(rgb_img, self.IS_SILENT)
             pred_idx, pred_rgb = self.model_config.process_predict(seg_out, self.IS_SILENT)
             torch.cuda.synchronize()
@@ -81,4 +75,6 @@ class FrameThread(QThread):
             self.frame_store.rgb_img = rgb_img
             self.frame_store.pred_rgb = pred_rgb
             self.frame_store.pred_idx = pred_idx
+            # resize d1 depth image
+            self.frame_store.d1_img = cv2.resize(self.d1_img, self.model_config.RESIZE, interpolation = cv2.INTER_LINEAR)
             self.frame_signal.emit(self.frame_store)

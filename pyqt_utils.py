@@ -6,14 +6,17 @@ from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 
 
-def convert_qimg(frame, win_width = 420, win_height = 240):
+def convert_qimg(frame, win_width = 420, win_height = 240, is_gray = False):
     """
     convert from cv2 frame to QImage frame.
 
     input:
         frame -- np array, in BGR channel
     """
-    img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    if is_gray:
+        img = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
+    else:
+        img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     h, w, c = img.shape
     byte_per_line = c * w
     qimg = QtGui.QImage(img.data, w, h, byte_per_line, QtGui.QImage.Format_RGB888)\
