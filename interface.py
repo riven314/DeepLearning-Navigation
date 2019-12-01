@@ -23,8 +23,11 @@ class SimplifyInteface(Layout):
     
     def init_thread(self):
         self.f_thread = FrameThread()
+        # retrieve class mapping, color mapping and camera scale
         self.seg_names = self.f_thread.model_config.names
         self.seg_colors = self.f_thread.model_config.colors
+        self.depth_scale = self.f_thread.rs_camera.depth_scale
+        # connect thread to different slots
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_first_layer(frame_store))
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_second_layer(frame_store))
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_third_layer(frame_store))
@@ -71,8 +74,10 @@ class SimplifyInteface(Layout):
             self.obj_dist.setText('NA')
         else:
             obj_name = self.names[obj_tup[1] + 1]
+            # translate pixel value to meter
+            meter = obj_tup[2] * self.depth_scale
             self.obj_name.setText(obj_name)
-            self.obj_dist.setText('{} m'.format(obj_tup[2]))
+            self.obj_dist.setText('{} m'.format(meter))
 
 
 if __name__ == '__main__':

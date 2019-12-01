@@ -73,10 +73,10 @@ class FrameThread(QThread):
             camera_start = time.time()
             frames = self.rs_camera.pipeline.wait_for_frames()
             frames = self.align.process(frames)
-            rgb_frame = frames.get_color_frame() # uint 8
-            depth_frame = frames.get_depth_frame() # unit 8
-            color_image = np.asanyarray(rgb_frame.get_data())
-            depth_image = np.asanyarray(depth_frame.get_data())
+            rgb_frame = frames.get_color_frame() 
+            depth_frame = frames.get_depth_frame() 
+            color_image = np.asanyarray(rgb_frame.get_data()) # uint 8
+            depth_image = np.asanyarray(depth_frame.get_data()) # unit 16
             torch.cuda.synchronize()
             camera_end = time.time()
             self.frame_store.camera_time = camera_end - camera_start

@@ -106,29 +106,35 @@ class ModelMetaConfig:
     
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
-    DATA_PATH = os.path.join(os.getcwd(), 'test_cases', 'test_obj_avoid_rgb.jpg')
-    img = cv2.imread(DATA_PATH)
-    #img = np.load(DATA_PATH)
-    img = img[:,:,::-1]
-    print('image shape = {}'.format(img.shape))
-    plt.imshow(img)
-    plt.show()
+    import re
     x = ModelMetaConfig()
     x.RESIZE = (427, 240)
-    for i in range(5):
-        # time img process + predict
+    ROOT_PATH = os.path.join(os.getcwd(), 'd435_camera', 'test_cases', 'lab_corridor_2')
+    DATA_LIST = [os.path.join(ROOT_PATH, p) for p in os.listdir(ROOT_PATH) if 'rgb.jpg' in p]
+    WRITE_SEG_RGB_PATH = os.path.join(ROOT_PATH, 'test_lab_corridor{}_seg_rgb.jpg')
+    WRITE_SEG_IDX_PATH = os.path.join(ROOT_PATH, 'test_lab_corridor{}_seg_idx.png')
+    for data_path in DATA_LIST:
+        _, f = os.path.split(data_path)
+        i = int(re.findall(r'\d+', f)[0])
+        w_seg_rgb_path = WRITE_SEG_RGB_PATH.format(i)
+        w_seg_idx_path = WRITE_SEG_IDX_PATH.format(i)
+        img = cv2.imread(data_path)
+        #img = np.load(DATA_PATH)
+        img = img[:,:,::-1]
+        print('image shape = {}'.format(img.shape))
         torch.cuda.synchronize()
         start = time.time()
         pred = x.raw_predict(img, is_silent = True)
         torch.cuda.synchronize()
         end = time.time()
         print('process+predict: {}s'.format(end - start))
-
         torch.cuda.synchronize()
         start = time.time()
         idx_pred, color_pred = x.process_predict(pred, is_silent = True)
         torch.cuda.synchronize()
         end = time.time()
         print('visualize: {}s'.format(end - start))
-    plt.imshow(color_pred)
-    plt.show()
+        cv2.imwrite(w_seg_rgb_path, color_pred)
+        cv2.imwrite(w_seg_idx_path, idx_pred)
+        print('WRITE PATH: {}'.format(w_seg_rgb_path))
+        print('WRITE_PATH: {}'.format(w_seg_idx_path))

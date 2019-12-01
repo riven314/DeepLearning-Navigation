@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 PATH = os.path.join(os.getcwd(), '..')
 sys.path.append(PATH)
 
@@ -17,8 +18,12 @@ SEG_IDX_PATH = os.path.join(os.getcwd(), '..', 'test_cases', 'test_obj_avoid_pre
 d1_img = cv2.imread(D1_IMG_PATH, cv2.IMREAD_GRAYSCALE)
 seg_idx = cv2.imread(SEG_IDX_PATH, cv2.IMREAD_GRAYSCALE)
 
-obj_tup, obj_img = run_avoidance(d1_img, seg_idx, depth_threshold = 8, visible_width = 90)
-print('obj_tup = {}'.format(obj_tup))
+for i in range(5):
+    start = time.time()
+    obj_tup, obj_img = run_avoidance(d1_img, seg_idx, depth_threshold = 8, visible_width = 90)
+    end = time.time()
+    print('obj_tup = {}'.format(obj_tup))
+    print('runtime: {}'.format(end - start))
 
 rgb_img = cv2.cvtColor(obj_img, cv2.COLOR_GRAY2RGB)
 plt.imshow(obj_img)

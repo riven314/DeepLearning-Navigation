@@ -28,12 +28,12 @@ from skimage import measure
 # note that colors[key] --> names[key+1] (by me)
 #label_dict = {1: 'wall', 2: 'floor', 3: 'plant', 4: 'ceiling', 5: 'furniture', 6: 'person', 7: 'door', 8: 'objects'}
 
-def run_avoidance(d1_img, seg_idx, depth_threshold = 8, visible_width = 90):
+def run_avoidance(d1_img, seg_idx, depth_threshold = 2000, visible_width = 90):
     """
     input:
-        d1_img -- np array, 1 channel depth
+        d1_img -- np array, 1 channel depth (uint16)
         seg_idx -- np array, segmentation output with index only
-        depth_threshold -- int, for apply masking by depth
+        depth_threshold -- int, for apply masking by depth, *for depth in uint16
         visible_width -- 90, number of pixel up front you wanna be visible
         ** make sure d1_img, seg_idx have same size
     output:
@@ -64,10 +64,11 @@ def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold = 8, visible_width =
     output:
         (min_inst_idx, min_cls_idx, min_dist) -- (instance index, class index, its distance)
     """
-    # apply filter on distance and angle
     _, w = seg_idx.shape
+    # set up front angle width
     lower_limit = int(w/2 - visible_width/2)
     upper_limit = int(w/2 + visible_width/2)
+    # apply filter on distance and angle
     filter_inst_idx = (d1_img < depth_threshold) * inst_idx
     filter_inst_idx[:, :lower_limit] = 0
     filter_inst_idx[:, upper_limit:] = 0

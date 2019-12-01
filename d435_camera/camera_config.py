@@ -158,10 +158,10 @@ if __name__ == '__main__':
                                                 is_process_depth = False)
     #color_image = color_image[:,:,::-1]
     #depth_colormap = depth_colormap[:,:,::-1]
-    cv2.imwrite(RGB_PATH, color_image)
-    cv2.imwrite(D1_PATH, depth_image)
-    cv2.imwrite(D3_PATH, depth_colormap)
-    print('RGB SAVE: {}, {}'.format(color_image.shape, RGB_PATH))
-    print('DEPTH 1C SAVE: {}, {}'.format(depth_image.shape, D1_PATH))
-    print('DEPTH 3C SAVE: {}, {}'.format(depth_colormap.shape, D3_PATH))
+    #cv2.imwrite(RGB_PATH, color_image)
+    #cv2.imwrite(D1_PATH, depth_image)
+    #cv2.imwrite(D3_PATH, depth_colormap)
+    #print('RGB SAVE: {}, {}'.format(color_image.shape, RGB_PATH))
+    #print('DEPTH 1C SAVE: {}, {}'.format(depth_image.shape, D1_PATH))
+    #print('DEPTH 3C SAVE: {}, {}'.format(depth_colormap.shape, D3_PATH))
     #color_image, depth_image = rs_handler.get_snapshot_np(name = 'cls1')
