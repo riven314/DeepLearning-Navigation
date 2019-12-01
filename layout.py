@@ -30,8 +30,8 @@ class Layout(QWidget):
         self.title = 'Interface for Navigation'
         self.top = 100
         self.left = 100
-        self.width = 1200
-        self.height = 1000
+        self.width = 1000
+        self.height = 700
         self.init_window()
         
     def init_window(self):
@@ -50,8 +50,8 @@ class Layout(QWidget):
         self.second_layer = QGroupBox('SCENE UNDERSTANDING')
         self.third_layer = QGroupBox('OBSTACLE AVOIDANCE')
         grid.addWidget(self.first_layer, 0, 0, 1, 3)
-        grid.addWidget(self.second_layer, 1, 0, 6, 6)
-        grid.addWidget(self.third_layer, 7, 0, 6, 6)
+        grid.addWidget(self.second_layer, 1, 0, 4, 6)
+        grid.addWidget(self.third_layer, 5, 0, 4, 6)
         self.setLayout(grid)
         # fill up each layers
         self.fill_layers()
