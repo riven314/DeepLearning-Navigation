@@ -106,9 +106,7 @@ class ModelMetaConfig:
     
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
-    DATA_PATH = os.path.join(os.getcwd(), 'd435_camera', 'test_cases', 'lab_corridor', 'test_lab_corridor37_rgb.jpg')
-    WRITE_IDX_PATH = os.path.join(os.getcwd(), 'test_cases', 'test4_pred_idx.png')
-    WRITE_COLOR_PATH = os.path.join(os.getcwd(), 'test_cases', 'test4_pred_rgb.jpg')
+    DATA_PATH = os.path.join(os.getcwd(), 'test_cases', 'test_obj_avoid_rgb.jpg')
     img = cv2.imread(DATA_PATH)
     #img = np.load(DATA_PATH)
     img = img[:,:,::-1]
@@ -116,6 +114,7 @@ if __name__ == '__main__':
     plt.imshow(img)
     plt.show()
     x = ModelMetaConfig()
+    x.RESIZE = (427, 240)
     for i in range(5):
         # time img process + predict
         torch.cuda.synchronize()
@@ -133,7 +132,3 @@ if __name__ == '__main__':
         print('visualize: {}s'.format(end - start))
     plt.imshow(color_pred)
     plt.show()
-    cv2.imwrite(WRITE_IDX_PATH, idx_pred)
-    # RGB to BGR
-    color_pred = color_pred[:, : , ::-1]
-    cv2.imwrite(WRITE_COLOR_PATH, color_pred)

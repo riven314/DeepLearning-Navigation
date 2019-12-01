@@ -93,47 +93,6 @@ def ImageLoad(data, width, height, ensemble_n, is_silent):
     return output
 
 
-def rescale_img(args):
-    """
-    copy a image and resize with target scale 
-
-    input:
-        ori_height -- original height of image
-        ori_width -- original width of image
-        normalize -- torch.transforms
-        img -- np array, (H, W, 3)
-        target_scale -- int, e.g. any one of [300, 375, 450, 525, 600] 
-        img_max_size -- max image size after resizing
-        p -- int, padding value
-        device -- CPU or GPU
-    output:
-        img_resized -- torch tensor after resizing
-    """
-    ori_height = args[0]
-    ori_width = args[1]
-    normalize = args[2]
-    img = args[3]
-    target_scale = args[4]
-    img_max_size = 1000
-    p = 8
-    scale = min(target_scale / float(min(ori_height, ori_width)),
-                img_max_size / float(max(ori_height, ori_width)))
-    target_height, target_width = int(ori_height * scale), int(ori_width * scale)
-    
-    #to avoid rounding in network
-    # Round x to the nearest multiple of p and x' >= x
-    target_width = ((target_width - 1) // p + 1) * p
-    target_height = ((target_height - 1) // p + 1) * p
-    
-    #[cv2 approach] resizing image
-    img_resize = cv2.resize(img, (target_width, target_height), interpolation = cv2.INTER_LINEAR)
-    
-    #image transform, to torch float tensor 3xHxW
-    img_resized = np.float32(img_resize) / 255
-    img_resized = img_resized.transpose((2,0,1))
-    return img_resized
-
-
 def ImageLoad_cv2(data, width, height, ensemble_n, is_silent):
     """
     read the image data and resize it.
