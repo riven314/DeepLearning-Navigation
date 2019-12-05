@@ -11,6 +11,7 @@ In this capstone project, we developed a deep learning-based local navigation sy
 3. An **Obstacle avoidance module** for detection of closest obstacle  
 
 <br>
+
 ![Interface](results/cover.jpg)
 
 <p align="right">
