@@ -8,7 +8,9 @@ This is a capstone group project of my master degree. We developed a Deep learni
 2. A **scene understanding module** for summarising spatial scene into grid of objects  
 3. An **Obstacle avoidance module** for detection of closest obstacle  
 
+<p align="center">
 ![Interface](results/cover.jpg)
+</p>
 
 <p align="right">
 <sub>(Interface Preview)</sub>
