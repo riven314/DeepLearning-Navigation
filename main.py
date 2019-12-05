@@ -98,7 +98,6 @@ class Window(QWidget):
         depth_label = QLabel(self)
         depth_label.resize(WIDGET_WIDTH, WIDGET_HEIGHT)
         depth_label.setObjectName('depth')
-        depth_label.mousePressEvent = self.query_depth
         depth_title = QLabel('Depth Image')
         seg_label = QLabel(self)
         seg_label.resize(WIDGET_WIDTH, WIDGET_HEIGHT)
@@ -132,12 +131,16 @@ class Window(QWidget):
             qimg = convert_qimg(frame_store.rgb_img)
             self.rgb_label.setPixmap(QtGui.QPixmap.fromImage(qimg))
         elif img_type == 'depth':
-            qimg = convert_qimg(frame_store.depth_3c_img)
+            frame_store.d1_img = np.uint8(frame_store.d1_img)
+            if len(frame_store.d1_img.shape) == 2:
+                is_gray = True
+            else:
+                is_gray = False
+            qimg = convert_qimg(frame_store.d1_img * 30, is_gray = is_gray)
             # store depth 1-channel map for distance query
-            self.depth_1c_map = frame_store.depth_1c_img
             self.depth_label.setPixmap(QtGui.QPixmap.fromImage(qimg))
         else:
-            self.seg_qimg = convert_qimg(frame_store.seg_out)
+            self.seg_qimg = convert_qimg(frame_store.pred_rgb)
             #self.seg_pixmap = QtGui.QPixmap.fromImage(qimg)
             self.seg_label.setPixmap(QtGui.QPixmap.fromImage(self.seg_qimg))
 
@@ -159,13 +162,6 @@ class Window(QWidget):
         idx = np.where((self.seg_colors == rgb).all(axis = 1))[0][0]
         obj = self.seg_names[idx + 1]
         return obj
-
-    def query_depth(self, event):
-        # x,y coordinate relative to the widget size
-        x = event.pos().x()
-        y = event.pos().y()
-        distance = self.depth_1c_map[x, y]
-        print('x = {}; y = {}; distance = {}'.format(x, y, distance))
 
 
 if __name__ == '__main__':

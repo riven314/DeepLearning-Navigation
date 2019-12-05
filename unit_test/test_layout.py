@@ -46,10 +46,21 @@ class TestLayout(Layout):
         self.grid_1.setText('person, person, person')
         self.obj_dist.setText('1.44 m')
 
+    def update_lightbulb(self):
+        from pyqt_utils import convert_qimg
+        import cv2
+        from PyQt5.QtGui import QPixmap
+
+        img = cv2.imread(os.path.join('..', 'images', 'green.jpg'))
+        qimg = convert_qimg(img, win_width = 50, win_height = 50)
+        self.lightbulb.setPixmap(QPixmap.fromImage(qimg))
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     win = TestLayout()
+    win.update_lightbulb()
     qtmodern.styles.dark(app)
     win_modern = qtmodern.windows.ModernWindow(win)
     win_modern.show()

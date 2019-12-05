@@ -54,7 +54,6 @@ class FrameThread(QThread):
                                      self.RESOLUTION, self.DEPTH_FORMAT, 
                                      self.FPS)
         self.align = rs.align(rs.stream.color)
-        #self.colorizer = rs.colorizer()
         # model related
         self.model_config = ModelMetaConfig()
         self.model_config.ENSEMBLE_N = 1
@@ -91,8 +90,10 @@ class FrameThread(QThread):
             self.frame_store.rgb_img = color_image
             self.frame_store.pred_idx = pred_idx
             self.frame_store.pred_rgb = pred_rgb
-            self.frame_store.d1_img = cv2.resize(depth_image, 
+            self.frame_store.d1_img = cv2.resize(depth_image * 30, 
                                                  self.model_config.RESIZE, 
                                                  interpolation = cv2.INTER_LINEAR)
+            #cv2.imwrite('testing.png', self.frame_store.d1_img)
+            #self.frame_store.d1_img = depth_image
             self.frame_signal.emit(self.frame_store)
             

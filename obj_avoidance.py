@@ -28,7 +28,7 @@ from skimage import measure
 # note that colors[key] --> names[key+1] (by me)
 #label_dict = {1: 'wall', 2: 'floor', 3: 'plant', 4: 'ceiling', 5: 'furniture', 6: 'person', 7: 'door', 8: 'objects'}
 
-def run_avoidance(d1_img, seg_idx, depth_threshold = 2000, visible_width = 90):
+def run_avoidance(d1_img, seg_idx, depth_threshold = 1500, visible_width = 60):
     """
     input:
         d1_img -- np array, 1 channel depth (uint16)
@@ -40,6 +40,7 @@ def run_avoidance(d1_img, seg_idx, depth_threshold = 2000, visible_width = 90):
         obj_tup -- tuple, (class idx, distance, (x, y))
         obj_img -- np array -- image showing single object only
     """
+    assert d1_img.shape == seg_idx.shape, '[ERROR] depth image shape not align with segmentation index'
     # omit floor (idx = 1, name = 2) and ceiling (idx = 3, name = 4)
     seg_idx[seg_idx == 1] = 0
     seg_idx[seg_idx == 3] = 0
@@ -52,10 +53,10 @@ def run_avoidance(d1_img, seg_idx, depth_threshold = 2000, visible_width = 90):
     return obj_tup, obj_img
 
 
-def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold = 8, visible_width = 90):
+def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold, visible_width):
     """
     input:
-        d1_img -- np array, 1 channel depth
+        d1_img -- np array, 1 channel depth (uint8)
         seg_idx -- np array, segmentation index map
         inst_idx -- np array, output from connected components
         depth_threshold -- int, for apply masking by depth
@@ -84,7 +85,10 @@ def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold = 8, visible_width =
         depth = d1_img[idx_locs]
         # remove noise in depth map
         depth[depth == 0] = depth.max()
-        dist = np.sort(depth, axis = None)[:10].mean()
+        depth[depth < 90] = depth.max()
+        #dist = np.sort(depth, axis = None)
+        dist = np.sort(depth, axis = None)[:5].mean()
+        print(np.sort(depth, axis = None)[:5])
         if dist < min_dist:
             min_inst_idx = idx
             min_cls_idx = cls_idx

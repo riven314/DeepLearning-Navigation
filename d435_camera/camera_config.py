@@ -154,8 +154,9 @@ if __name__ == '__main__':
     D3_PATH = os.path.join(os.getcwd(), 'test_cases', 'lab_corridor_2', 'test_lab_' + name + '_d3c.jpg')
     rs_handler = RGBDhandler(resolution, 'bgr8', resolution, 'z16', 30)
     color_image, depth_image, depth_colormap = rs_handler.test_streamline(
-                                                frame_limit = 40, 
-                                                is_process_depth = False)
+                                                frame_limit = 200, 
+                                                is_process_depth = False,
+                                                is_align = True)
     #color_image = color_image[:,:,::-1]
     #depth_colormap = depth_colormap[:,:,::-1]
     #cv2.imwrite(RGB_PATH, color_image)

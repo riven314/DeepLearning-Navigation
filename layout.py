@@ -12,6 +12,7 @@ REFERENCE:
     - https://pythonspot.com/pyqt5-grid-layout/
 2. setting different text box, drop-down box: https://pythonspot.com/pyqt5-form-layout/
 3. setting QGridLayout with varying height and width for each cell: https://stackoverflow.com/questions/47910192/qgridlayout-different-column-width
+4. adding LED lightbulb: https://stackoverflow.com/questions/38195763/implementing-led-in-pyqt-designer
 """
 import os
 import sys
@@ -98,7 +99,7 @@ class Layout(QWidget):
         layout = QGridLayout()
         self.seg_widget = QGroupBox('Frame')
         self.seg_summary = QGroupBox('Summary')
-        layout.addWidget(self.seg_widget, 0, 0, 1, 2)
+        layout.addWidget(self.seg_widget, 0, 0, 1, 3)
         layout.addWidget(self.seg_summary, 0, 3, 1, 1)
         self.second_layer.setLayout(layout)
         # set up widgets for each grid
@@ -142,7 +143,7 @@ class Layout(QWidget):
         layout = QGridLayout()
         self.obj_widget = QGroupBox('Frame')
         self.obj_summary = QGroupBox('Summary')
-        layout.addWidget(self.obj_widget, 0, 0, 1, 2)
+        layout.addWidget(self.obj_widget, 0, 0, 1, 3)
         layout.addWidget(self.obj_summary, 0, 3, 1, 1)
         self.third_layer.setLayout(layout)
         # set up widget for each grid
@@ -159,15 +160,21 @@ class Layout(QWidget):
         layout = QGridLayout()
         self.obj_name = QLabel('other')
         self.obj_dist = QLabel('1.5 m')
-        layout.addWidget(QLabel('    CLASS:'), 0, 0, 1, 1)
-        layout.addWidget(self.obj_name, 0, 1, 1, 3)
-        layout.addWidget(QLabel('    DISTANCE'), 1, 0, 1, 1)
-        layout.addWidget(self.obj_dist, 1, 1, 1, 3)
+        self.lightbulb = QLabel()
+        layout.addWidget(QLabel(), 0, 0, 1, 2)
+        layout.addWidget(self.lightbulb, 1, 1, 1, 2)
+        layout.addWidget(QLabel(), 2, 0, 1, 2)
+        layout.addWidget(QLabel('    CLASS:'), 3, 0, 1, 1)
+        layout.addWidget(self.obj_name, 3, 1, 1, 2)
+        layout.addWidget(QLabel('    DISTANCE'), 4, 0, 1, 1)
+        layout.addWidget(self.obj_dist, 4, 1, 1, 2)
+        layout.addWidget(QLabel(), 5, 1, 2, 2)
         self.obj_summary.setLayout(layout)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     win = Layout()
+    win.test_lightbulb()
     win.show()
     sys.exit(app.exec_())

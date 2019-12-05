@@ -23,17 +23,28 @@ class SimplifyInteface(Layout):
     def __init__(self):
         super().__init__()
         # setup for scene understanding
+        self.load_lightbulb()
         self.mat = create_grid(h = 240, w = 427)
         self.names = get_names()
         self.init_thread()
-    
+
+    def load_lightbulb(self):
+        RED_PATH = os.path.join('..', 'images', 'red.jpg')
+        GREEN_PATH = os.path.join('..', 'images', 'green.jpg')
+        assert os.path.isfile(RED_PATH), '[ERROR] Path not exist: {}'.format(RED_PATH)
+        assert os.path.isfile(GREEN_PATH), '[ERROR] Path not exist: {}'.format(GREEN_PATH)
+        red = cv2.imread(RED_PATH)
+        green = cv2.imread(GREEN_PATH)
+        self.red_qimg = convert_qimg(red, win_width = 50, win_height = 50)
+        self.green_qimg = convert_qimg(green, win_width = 50, win_height = 50)
+
     def init_thread(self):
         self.f_thread = FrameThread()
         self.seg_names = self.f_thread.model_config.names
         self.seg_colors = self.f_thread.model_config.colors
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_first_layer(frame_store))
         self.f_thread.frame_signal.connect(lambda frame_store: self.update_second_layer(frame_store))
-        self.f_thread.frame_signal.connect(lambda frame_store: self.update_thired_layer(frame_store))
+        self.f_thread.frame_signal.connect(lambda frame_store: self.update_third_layer(frame_store))
         self.f_thread.start()
     
     def update_first_layer(self, frame_store):
@@ -62,7 +73,7 @@ class SimplifyInteface(Layout):
             q_label = getattr(self, 'grid_{}'.format(i + 1))
             q_label.setText(txt)
 
-    def update_thired_layer(self, frame_store):
+    def update_third_layer(self, frame_store):
         obj_tup, obj_img = run_avoidance(frame_store.d1_img, frame_store.pred_idx)
         qimg = convert_qimg(obj_img, win_width = 620, win_height = 360, is_gray = True)
         # update frame on left
@@ -71,10 +82,12 @@ class SimplifyInteface(Layout):
         if obj_tup[1] is None:
             self.obj_name.setText('NA')
             self.obj_dist.setText('NA')
+            self.lightbulb.setPixmap(QPixmap.fromImage(self.green_qimg))
         else:
             obj_name = self.names[obj_tup[1] + 1]
             self.obj_name.setText(obj_name)
             self.obj_dist.setText('{} m'.format(obj_tup[2]))
+            self.lightbulb.setPixmap(QPixmap.fromImage(self.red_qimg))
 
 
 if __name__ == '__main__':
