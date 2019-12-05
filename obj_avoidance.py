@@ -28,7 +28,7 @@ from skimage import measure
 # note that colors[key] --> names[key+1] (by me)
 #label_dict = {1: 'wall', 2: 'floor', 3: 'plant', 4: 'ceiling', 5: 'furniture', 6: 'person', 7: 'door', 8: 'objects'}
 
-def run_avoidance(d1_img, seg_idx, depth_threshold = 1500, visible_width = 60):
+def run_avoidance(d1_img, seg_idx, depth_threshold = 500, visible_width = 60):
     """
     input:
         d1_img -- np array, 1 channel depth (uint16)
@@ -71,12 +71,18 @@ def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold, visible_width):
     upper_limit = int(w/2 + visible_width/2)
     # apply filter on distance and angle
     filter_inst_idx = (d1_img < depth_threshold) * inst_idx
+    for i in np.unique(filter_inst_idx):
+        if i != 0:
+            if len(np.where(filter_inst_idx != 0)[0]) < 850: filter_inst_idx[np.where(filter_inst_idx != 0)] = 0
+    # find the closest distance
     filter_inst_idx[:, :lower_limit] = 0
     filter_inst_idx[:, upper_limit:] = 0
     # find closeset distance
     min_inst_idx, min_cls_idx, min_dist = None, None, float('inf')
     for idx in np.unique(filter_inst_idx):
         idx_locs = np.where(inst_idx == idx)
+        if len(idx_locs[0]) == 0:
+            continue
         loc = (idx_locs[0][0], idx_locs[1][0])
         cls_idx = seg_idx[loc[0], loc[1]]
         # skip 0 index (background)
@@ -85,10 +91,10 @@ def get_obj_info(d1_img, seg_idx, inst_idx, depth_threshold, visible_width):
         depth = d1_img[idx_locs]
         # remove noise in depth map
         depth[depth == 0] = depth.max()
-        depth[depth < 90] = depth.max()
+        depth[depth < 150] = depth.max()
         #dist = np.sort(depth, axis = None)
-        dist = np.sort(depth, axis = None)[:5].mean()
-        print(np.sort(depth, axis = None)[:5])
+
+        dist = np.sort(depth, axis = None)[:20].mean()
         if dist < min_dist:
             min_inst_idx = idx
             min_cls_idx = cls_idx

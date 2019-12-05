@@ -76,7 +76,8 @@ class SimplifyInteface(Layout):
         """
         update obstacle avoidance (frame + summary)
         """
-        obj_tup, obj_img = run_avoidance(frame_store.d1_img, frame_store.pred_idx, depth_threshold = 6)
+        obj_tup, obj_img = run_avoidance(frame_store.d1_img, frame_store.pred_idx, 
+                                         depth_threshold = 1000, visible_width = 30)
         # convert to uint8 is important!
         obj_img = np.uint8(obj_img)
         qimg = convert_qimg(obj_img, win_width = 620, win_height = 360, is_gray = True)
