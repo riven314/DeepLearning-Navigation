@@ -63,19 +63,20 @@ This module informs the users if they are facing any close obstacles. A red ligh
 ![obj_avoid](results/w_obj.jpg)
 
 ## Demonstration  
-We prepared two videos to show case our system. 
-
-The first demo shows the fast frame rate and the segmentation stability of our system. It also shows how our obstacle avoidance module works. When any close obstacle is right close to the user, red light is on with the corresponding obstacle visualized. 
+The demo shows the fast frame rate and the segmentation stability of our system. It also shows how our obstacle avoidance module works. When any close obstacle is right close to the user, red light is on with the corresponding obstacle visualized. 
 
 *(Short demo video for our system)*
 
 ![short_demo](results/demo.gif)
 <br><br>
 
-Our second demo is an experiment we conducted in a narrow corridor (located in Run Run Shaw Building, The University of Hong Kong). One of our teammate role played the blind and navigated in the corridor by solely relying on our system.
+## Corridor Experiment
+To show case the real time capacity of our system, we also conducted an experiment in a narrow corridor (located in Run Run Shaw Building, The University of Hong Kong). 
 
-*(A snapshot of our demo in corridor, the full demo can be found on [Google Drive](https://drive.google.com/file/d/1XXBcXv-kllpN9k63bk1p5M5xWrsTEt2k/view?usp=sharing))*
-![long_demo](results/full_demo_snapshot.jpg)
+In the experiment, one of our teammates role played the blind and navigated in the corridor by solely relying on our system. Video can be found in the link below.
+
+*(A snapshot of our corridor experiment, the full demo can be found on [Google Drive](https://drive.google.com/file/d/1XXBcXv-kllpN9k63bk1p5M5xWrsTEt2k/view?usp=sharing))*
+![long_demo](results/full_demo_snapshot.JPG)
 
 ## Acknowledgement  
 This is my capstone project for my Master of Data Science degree in The University of Hong Kong. The project is jointly developed by Alex Lau, Guo Huimin and Xie Jun.  
@@ -85,6 +86,5 @@ We would like to take this chance to thank our two supervisors, Professor Yin Gu
 Our segmentation module is mainly built on [semantic-segmentation-pytorch](https://github.com/CSAILVision/semantic-segmentation-pytorch).
 The work gives us a very strong baseline to make our system solid.
 
-
-## License
-To Be Filled
+## Remarks
+Any contribution is welcome. For enquiry, you can contact Alex Lau ([alexlauwh@gmail.com](alexlauwh@gmail.com)) for details.
