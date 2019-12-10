@@ -7,7 +7,7 @@ This is a deep learning-based local navigation system for the visually impaired 
 <br>
 
 <p align="center">
-  <img src="results/cover.jpg" alt="Sublime's custom image"/>
+  <img src="results/cover.jpg" alt="interface preview"/>
 </p>
 
 ## Hardware Specification  
@@ -70,13 +70,14 @@ The demo shows the fast frame rate and the segmentation stability of our system.
 
 *(Short demo video for our system)*
 
-![short_demo](results/demo.gif)
-<br><br>
+<p align="center">
+  <img src="results/demo.gif" alt="short demo"/>
+</p>
 
 ## Corridor Experiment
 To show case the real time capacity of our system, we also conducted an experiment in a narrow corridor (located in Run Run Shaw Building, The University of Hong Kong). 
 
-In the experiment, one of our teammates role played the blind and navigated in the corridor by solely relying on our system. Video can be found in the link below.
+In the experiment, one of our teammates role played the blind and navigated in the corridor by solely relying on our system. Video can be found [here](https://drive.google.com/file/d/1XXBcXv-kllpN9k63bk1p5M5xWrsTEt2k/view?usp=sharing).
 
 *(A snapshot of our corridor experiment, the full demo can be found on [Google Drive](https://drive.google.com/file/d/1XXBcXv-kllpN9k63bk1p5M5xWrsTEt2k/view?usp=sharing))*
 ![long_demo](results/full_demo_snapshot.JPG)
