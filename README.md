@@ -1,11 +1,14 @@
 ## About
-  
-In this capstone project, we developed a deep learning-based local navigation system for the visually impaired users. The system is prototyped in Python and it offers 3 special features:  
-1. A state-of-the-art segmentation module that supports **low latency (around 20 FPS) with remarkable segmentation performance**
+This is a deep learning-based local navigation system for the visually impaired users. The system is prototyped in ```Python``` and it offers 3 special features:  
+
+1. A segmentation module with **low latency (around 20 FPS) and reliable segmentation performance**  
 2. A **scene understanding module** for summarising spatial scene into grid of objects  
 3. An **Obstacle avoidance module** for detection of closest obstacle  
+<br>
 
-![Interface](results/cover.jpg)
+<p align="center">
+  <img src="results/cover.jpg" alt="Sublime's custom image"/>
+</p>
 
 ## Hardware Specification  
 To produce the statistics reported here, we use a notebook with the following specification:  
